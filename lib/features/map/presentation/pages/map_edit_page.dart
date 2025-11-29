@@ -2,13 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hackathon_2025_app/core/services/auth_service.dart';
+import 'package:hackathon_2025_app/core/services/koemyaku_service.dart';
 import 'package:hackathon_2025_app/core/services/location_service.dart';
 import 'package:hackathon_2025_app/core/widgets/map_loading_widget.dart';
-import 'package:hackathon_2025_app/features/map/data/models/marker_data.dart';
+import 'package:hackathon_2025_app/features/map/data/models/marker/marker_data.dart';
 import 'package:hackathon_2025_app/features/map/presentation/widgets/current_location_marker.dart';
 import 'package:hackathon_2025_app/features/map/presentation/widgets/marker_bottom_sheet.dart';
+import 'package:hackathon_2025_app/features/map/presentation/widgets/save_koemyaku_dialog.dart';
+import 'package:hackathon_2025_app/i18n/strings.g.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:uuid/uuid.dart';
 
@@ -44,6 +49,8 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
   MarkerData? _selectedMarker;
   // 選択中のマーカーの一時的な半径（ボトムシート操作中）
   double _tempRadius = 5.0;
+  // 保存中フラグ
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -155,6 +162,22 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
   }
 
   void _onMapTapped(LatLng latLng) {
+    // タップ位置が既存マーカーの円形エリア内にあるかチェック
+    const distance = Distance();
+    for (final marker in _savedMarkers) {
+      final distanceInMeters = distance.as(
+        LengthUnit.Meter,
+        latLng,
+        marker.latLng,
+      );
+      if (distanceInMeters <= marker.radius) {
+        // 円形エリア内をタップした場合は、そのマーカーを選択
+        _onSavedMarkerTapped(marker);
+        return;
+      }
+    }
+
+    // 既存マーカーの円形エリア外をタップした場合は、新しいマーカーを作成
     final newMarker = MarkerData.fromLatLng(
       id: const Uuid().v4(),
       latLng: latLng,
@@ -191,11 +214,13 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
       onSave: (voicePath, radius, amplitudes) {
         setState(() {
           if (!isEditing) {
-            _savedMarkers.add(marker.copyWith(
-              voicePath: voicePath,
-              radius: radius,
-              amplitudes: amplitudes,
-            ));
+            _savedMarkers.add(
+              marker.copyWith(
+                voicePath: voicePath,
+                radius: radius,
+                amplitudes: amplitudes,
+              ),
+            );
           } else {
             // 編集モードの場合は既存のマーカーを更新
             final index = _savedMarkers.indexWhere((m) => m.id == marker.id);
@@ -249,6 +274,59 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
     _showMarkerBottomSheet(marker, isEditing: true);
   }
 
+  Future<void> _saveKoemyaku() async {
+    final t = Translations.of(context);
+
+    // ダイアログを表示
+    final result = await SaveKoemyakuDialog.show(context);
+    if (result == null) return;
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      final authService = ref.read(authServiceProvider);
+      final koemyakuService = ref.read(koemyakuServiceProvider);
+
+      final userId = authService.userId;
+      if (userId == null) {
+        throw Exception('User not logged in');
+      }
+
+      await koemyakuService.saveKoemyaku(
+        userId: userId,
+        title: result.title,
+        message: result.message,
+        markers: _savedMarkers,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(t.map.saveSuccess)));
+
+        // 保存後、マーカーをクリア
+        setState(() {
+          _savedMarkers.clear();
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to save koemyaku: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(t.map.saveError)));
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // ローディング中はインジケータを表示
@@ -287,6 +365,22 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
                   ),
                 ],
               ),
+
+            // 選択中のマーカーの円形エリア
+            if (_selectedMarker != null)
+              CircleLayer(
+                circles: [
+                  CircleMarker(
+                    point: _selectedMarker!.latLng,
+                    radius: _tempRadius,
+                    useRadiusInMeter: true,
+                    color: Colors.blue.withValues(alpha: 0.2),
+                    borderColor: Colors.blue.withValues(alpha: 0.5),
+                    borderStrokeWidth: 2,
+                  ),
+                ],
+              ),
+
             // 保存されたマーカーの円形エリア
             CircleLayer(
               circles: _savedMarkers
@@ -303,20 +397,6 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
                   )
                   .toList(),
             ),
-            // 選択中のマーカーの円形エリア
-            if (_selectedMarker != null)
-              CircleLayer(
-                circles: [
-                  CircleMarker(
-                    point: _selectedMarker!.latLng,
-                    radius: _tempRadius,
-                    useRadiusInMeter: true,
-                    color: Colors.blue.withValues(alpha: 0.2),
-                    borderColor: Colors.blue.withValues(alpha: 0.5),
-                    borderStrokeWidth: 2,
-                  ),
-                ],
-              ),
             // 保存されたピン（選択中のピンは除外）
             MarkerLayer(
               markers: _savedMarkers
@@ -325,14 +405,12 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
                     (marker) => Marker(
                       point: marker.latLng,
                       width: 40,
-                      height: 40,
+                      height: 59,
+                      rotate: false,
+                      alignment: Alignment.topCenter,
                       child: GestureDetector(
                         onTap: () => _onSavedMarkerTapped(marker),
-                        child: const Icon(
-                          Icons.location_pin,
-                          color: Colors.red,
-                          size: 40,
-                        ),
+                        child: SvgPicture.asset('assets/images/marker.svg'),
                       ),
                     ),
                   )
@@ -345,11 +423,13 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
                   Marker(
                     point: _selectedMarker!.latLng,
                     width: 50,
-                    height: 50,
-                    child: const Icon(
-                      Icons.location_pin,
-                      color: Colors.blue,
-                      size: 50,
+                    height: 74,
+                    rotate: false,
+                    alignment: Alignment.topCenter,
+                    child: SvgPicture.asset(
+                      'assets/images/marker.svg',
+                      width: 50,
+                      height: 74,
                     ),
                   ),
                 ],
@@ -365,16 +445,42 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
           ],
         ),
       ),
-      
+
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(right: 16, bottom: 50),
-        child: FloatingActionButton(
-          onPressed: () {
-            if (_currentPosition != null) {
-              _animatedMove(_currentPosition!, _initialZoom);
-            }
-          },
-          child: const Icon(Icons.my_location),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 保存ボタン（マーカーが1つ以上ある場合のみ表示）
+            if (_savedMarkers.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: FloatingActionButton(
+                  heroTag: 'save',
+                  onPressed: _isSaving ? null : _saveKoemyaku,
+                  child: _isSaving
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Icon(Icons.save),
+                ),
+              ),
+            // 現在位置ボタン
+            FloatingActionButton(
+              heroTag: 'location',
+              onPressed: () {
+                if (_currentPosition != null) {
+                  _animatedMove(_currentPosition!, _initialZoom);
+                }
+              },
+              child: const Icon(Icons.my_location),
+            ),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

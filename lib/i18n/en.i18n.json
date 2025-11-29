@@ -1,4 +1,9 @@
 {
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving..."
+  },
   "map": {
     "markerBottomSheet": {
       "addPinConfirmation": "Add a pin to this location?",
@@ -10,7 +15,15 @@
       "close": "Close",
       "rangeLabel": "Range",
       "rangeUnit": "m"
-    }
+    },
+    "saveKoemyaku": "Save Koemyaku",
+    "title": "Title",
+    "titleHint": "Enter title",
+    "titleRequired": "Title is required",
+    "message": "Message",
+    "messageHint": "Enter message (optional)",
+    "saveSuccess": "Saved successfully",
+    "saveError": "Failed to save"
   },
   "welcome": {
     "title": "KoeMyaku",

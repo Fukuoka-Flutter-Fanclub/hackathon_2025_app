@@ -177,7 +177,9 @@ class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
               SizedBox(width: 16.w),
               Expanded(
                 child: FilledButton(
-                  onPressed: () => widget.onSave(_recordedVoicePath, _radius, _recordedAmplitudes),
+                  onPressed: _recordedVoicePath != null
+                      ? () => widget.onSave(_recordedVoicePath, _radius, _recordedAmplitudes)
+                      : null,
                   child: Text(context.t.map.markerBottomSheet.save),
                 ),
               ),

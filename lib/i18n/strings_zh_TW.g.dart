@@ -37,8 +37,21 @@ class TranslationsZhTw with BaseTranslations<AppLocale, Translations> implements
 	TranslationsZhTw $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsZhTw(meta: meta ?? this.$meta);
 
 	// Translations
+	@override late final _TranslationsCommonZhTw common = _TranslationsCommonZhTw._(_root);
 	@override late final _TranslationsMapZhTw map = _TranslationsMapZhTw._(_root);
 	@override late final _TranslationsWelcomeZhTw welcome = _TranslationsWelcomeZhTw._(_root);
+}
+
+// Path: common
+class _TranslationsCommonZhTw implements TranslationsCommonEn {
+	_TranslationsCommonZhTw._(this._root);
+
+	final TranslationsZhTw _root; // ignore: unused_field
+
+	// Translations
+	@override String get cancel => '取消';
+	@override String get save => '儲存';
+	@override String get saving => '儲存中...';
 }
 
 // Path: map
@@ -49,6 +62,14 @@ class _TranslationsMapZhTw implements TranslationsMapEn {
 
 	// Translations
 	@override late final _TranslationsMapMarkerBottomSheetZhTw markerBottomSheet = _TranslationsMapMarkerBottomSheetZhTw._(_root);
+	@override String get saveKoemyaku => '儲存聲脈';
+	@override String get title => '標題';
+	@override String get titleHint => '輸入標題';
+	@override String get titleRequired => '標題為必填';
+	@override String get message => '訊息';
+	@override String get messageHint => '輸入訊息（選填）';
+	@override String get saveSuccess => '儲存成功';
+	@override String get saveError => '儲存失敗';
 }
 
 // Path: welcome
@@ -90,6 +111,9 @@ class _TranslationsMapMarkerBottomSheetZhTw implements TranslationsMapMarkerBott
 extension on TranslationsZhTw {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'common.cancel' => '取消',
+			'common.save' => '儲存',
+			'common.saving' => '儲存中...',
 			'map.markerBottomSheet.addPinConfirmation' => '要在此位置新增圖釘嗎？',
 			'map.markerBottomSheet.editPinConfirmation' => '要編輯此圖釘嗎？',
 			'map.markerBottomSheet.latitude' => '緯度',
@@ -99,6 +123,14 @@ extension on TranslationsZhTw {
 			'map.markerBottomSheet.close' => '關閉',
 			'map.markerBottomSheet.rangeLabel' => '範圍',
 			'map.markerBottomSheet.rangeUnit' => 'm',
+			'map.saveKoemyaku' => '儲存聲脈',
+			'map.title' => '標題',
+			'map.titleHint' => '輸入標題',
+			'map.titleRequired' => '標題為必填',
+			'map.message' => '訊息',
+			'map.messageHint' => '輸入訊息（選填）',
+			'map.saveSuccess' => '儲存成功',
+			'map.saveError' => '儲存失敗',
 			'welcome.title' => 'KoeMyaku',
 			'welcome.subtitle' => '用聲音保存地點的記憶',
 			'welcome.description' => '在地圖上留下語音備忘，\n創建屬於您的聲音地圖',

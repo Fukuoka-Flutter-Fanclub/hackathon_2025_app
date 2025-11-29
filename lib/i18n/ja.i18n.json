@@ -1,4 +1,9 @@
 {
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "saving": "保存中..."
+  },
   "map": {
     "markerBottomSheet": {
       "addPinConfirmation": "この場所にピンを追加しますか？",
@@ -10,7 +15,15 @@
       "close": "閉じる",
       "rangeLabel": "範囲",
       "rangeUnit": "m"
-    }
+    },
+    "saveKoemyaku": "こえみゃくを保存",
+    "title": "タイトル",
+    "titleHint": "タイトルを入力",
+    "titleRequired": "タイトルは必須です",
+    "message": "メッセージ",
+    "messageHint": "メッセージを入力（任意）",
+    "saveSuccess": "保存しました",
+    "saveError": "保存に失敗しました"
   },
   "welcome": {
     "title": "KoeMyaku",

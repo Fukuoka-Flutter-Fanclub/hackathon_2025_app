@@ -40,8 +40,27 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
+	late final TranslationsCommonEn common = TranslationsCommonEn._(_root);
 	late final TranslationsMapEn map = TranslationsMapEn._(_root);
 	late final TranslationsWelcomeEn welcome = TranslationsWelcomeEn._(_root);
+}
+
+// Path: common
+class TranslationsCommonEn {
+	TranslationsCommonEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Cancel'
+	String get cancel => 'Cancel';
+
+	/// en: 'Save'
+	String get save => 'Save';
+
+	/// en: 'Saving...'
+	String get saving => 'Saving...';
 }
 
 // Path: map
@@ -52,6 +71,30 @@ class TranslationsMapEn {
 
 	// Translations
 	late final TranslationsMapMarkerBottomSheetEn markerBottomSheet = TranslationsMapMarkerBottomSheetEn._(_root);
+
+	/// en: 'Save Koemyaku'
+	String get saveKoemyaku => 'Save Koemyaku';
+
+	/// en: 'Title'
+	String get title => 'Title';
+
+	/// en: 'Enter title'
+	String get titleHint => 'Enter title';
+
+	/// en: 'Title is required'
+	String get titleRequired => 'Title is required';
+
+	/// en: 'Message'
+	String get message => 'Message';
+
+	/// en: 'Enter message (optional)'
+	String get messageHint => 'Enter message (optional)';
+
+	/// en: 'Saved successfully'
+	String get saveSuccess => 'Saved successfully';
+
+	/// en: 'Failed to save'
+	String get saveError => 'Failed to save';
 }
 
 // Path: welcome
@@ -119,6 +162,9 @@ class TranslationsMapMarkerBottomSheetEn {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'common.cancel' => 'Cancel',
+			'common.save' => 'Save',
+			'common.saving' => 'Saving...',
 			'map.markerBottomSheet.addPinConfirmation' => 'Add a pin to this location?',
 			'map.markerBottomSheet.editPinConfirmation' => 'Edit this pin?',
 			'map.markerBottomSheet.latitude' => 'Latitude',
@@ -128,6 +174,14 @@ extension on Translations {
 			'map.markerBottomSheet.close' => 'Close',
 			'map.markerBottomSheet.rangeLabel' => 'Range',
 			'map.markerBottomSheet.rangeUnit' => 'm',
+			'map.saveKoemyaku' => 'Save Koemyaku',
+			'map.title' => 'Title',
+			'map.titleHint' => 'Enter title',
+			'map.titleRequired' => 'Title is required',
+			'map.message' => 'Message',
+			'map.messageHint' => 'Enter message (optional)',
+			'map.saveSuccess' => 'Saved successfully',
+			'map.saveError' => 'Failed to save',
 			'welcome.title' => 'KoeMyaku',
 			'welcome.subtitle' => 'Memories of places, preserved in voice',
 			'welcome.description' => 'Leave voice memos on the map\nand create your own voice map',

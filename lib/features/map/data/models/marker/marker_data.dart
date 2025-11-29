@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -23,6 +24,19 @@ abstract class MarkerData with _$MarkerData {
 
   /// LatLngを取得するヘルパーメソッド
   LatLng get latLng => LatLng(latitude, longitude);
+
+  /// Firestore保存用のMapに変換
+  Map<String, dynamic> toFirestoreMap() {
+    return {
+      'id': id,
+      'latitude': latitude,
+      'longitude': longitude,
+      'radius': radius,
+      'voicePath': voicePath,
+      'amplitudes': amplitudes,
+      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+    };
+  }
 
   /// LatLngからMarkerDataを作成するファクトリ
   factory MarkerData.fromLatLng({

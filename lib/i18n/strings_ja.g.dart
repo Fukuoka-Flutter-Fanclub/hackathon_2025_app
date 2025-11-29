@@ -37,8 +37,21 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	TranslationsJa $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsJa(meta: meta ?? this.$meta);
 
 	// Translations
+	@override late final _TranslationsCommonJa common = _TranslationsCommonJa._(_root);
 	@override late final _TranslationsMapJa map = _TranslationsMapJa._(_root);
 	@override late final _TranslationsWelcomeJa welcome = _TranslationsWelcomeJa._(_root);
+}
+
+// Path: common
+class _TranslationsCommonJa implements TranslationsCommonEn {
+	_TranslationsCommonJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get cancel => 'キャンセル';
+	@override String get save => '保存';
+	@override String get saving => '保存中...';
 }
 
 // Path: map
@@ -49,6 +62,14 @@ class _TranslationsMapJa implements TranslationsMapEn {
 
 	// Translations
 	@override late final _TranslationsMapMarkerBottomSheetJa markerBottomSheet = _TranslationsMapMarkerBottomSheetJa._(_root);
+	@override String get saveKoemyaku => 'こえみゃくを保存';
+	@override String get title => 'タイトル';
+	@override String get titleHint => 'タイトルを入力';
+	@override String get titleRequired => 'タイトルは必須です';
+	@override String get message => 'メッセージ';
+	@override String get messageHint => 'メッセージを入力（任意）';
+	@override String get saveSuccess => '保存しました';
+	@override String get saveError => '保存に失敗しました';
 }
 
 // Path: welcome
@@ -90,6 +111,9 @@ class _TranslationsMapMarkerBottomSheetJa implements TranslationsMapMarkerBottom
 extension on TranslationsJa {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'common.cancel' => 'キャンセル',
+			'common.save' => '保存',
+			'common.saving' => '保存中...',
 			'map.markerBottomSheet.addPinConfirmation' => 'この場所にピンを追加しますか？',
 			'map.markerBottomSheet.editPinConfirmation' => 'このピンを編集しますか？',
 			'map.markerBottomSheet.latitude' => '緯度',
@@ -99,6 +123,14 @@ extension on TranslationsJa {
 			'map.markerBottomSheet.close' => '閉じる',
 			'map.markerBottomSheet.rangeLabel' => '範囲',
 			'map.markerBottomSheet.rangeUnit' => 'm',
+			'map.saveKoemyaku' => 'こえみゃくを保存',
+			'map.title' => 'タイトル',
+			'map.titleHint' => 'タイトルを入力',
+			'map.titleRequired' => 'タイトルは必須です',
+			'map.message' => 'メッセージ',
+			'map.messageHint' => 'メッセージを入力（任意）',
+			'map.saveSuccess' => '保存しました',
+			'map.saveError' => '保存に失敗しました',
 			'welcome.title' => 'KoeMyaku',
 			'welcome.subtitle' => '声で残す、場所の記憶',
 			'welcome.description' => '地図上に音声メモを残して、\nあなただけの声の地図を作りましょう',
