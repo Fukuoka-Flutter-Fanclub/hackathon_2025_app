@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../i18n/strings.g.dart';
+import 'radius_slider.dart';
 import 'voice_recorder/voice_recorder.dart';
 
 class MarkerBottomSheet extends StatefulWidget {
@@ -11,24 +13,30 @@ class MarkerBottomSheet extends StatefulWidget {
     required this.latLng,
     required this.onSave,
     required this.onDelete,
+    required this.onRadiusChanged,
     this.isEditing = false,
     this.onVoiceRecorded,
+    this.initialRadius = 5.0,
   });
 
   final LatLng latLng;
-  final void Function(String? voicePath) onSave;
+  final void Function(String? voicePath, double radius) onSave;
   final VoidCallback onDelete;
+  final void Function(double radius) onRadiusChanged;
   final bool isEditing;
   final ValueChanged<String>? onVoiceRecorded;
+  final double initialRadius;
 
   static Future<void> show({
     required BuildContext context,
     required LatLng latLng,
-    required void Function(String? voicePath) onSave,
+    required void Function(String? voicePath, double radius) onSave,
     required VoidCallback onDelete,
+    required void Function(double radius) onRadiusChanged,
     VoidCallback? onDismiss,
     bool isEditing = false,
     ValueChanged<String>? onVoiceRecorded,
+    double initialRadius = 5.0,
   }) {
     return showModalBottomSheet<void>(
       context: context,
@@ -41,9 +49,11 @@ class MarkerBottomSheet extends StatefulWidget {
           latLng: latLng,
           isEditing: isEditing,
           onVoiceRecorded: onVoiceRecorded,
-          onSave: (voicePath) {
+          initialRadius: initialRadius,
+          onRadiusChanged: onRadiusChanged,
+          onSave: (voicePath, radius) {
             Navigator.pop(context);
-            onSave(voicePath);
+            onSave(voicePath, radius);
           },
           onDelete: () {
             Navigator.pop(context);
@@ -62,6 +72,13 @@ class MarkerBottomSheet extends StatefulWidget {
 
 class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
   String? _recordedVoicePath;
+  late double _radius;
+
+  @override
+  void initState() {
+    super.initState();
+    _radius = widget.initialRadius;
+  }
 
   void _onVoiceRecorded(String path) {
     setState(() {
@@ -74,6 +91,14 @@ class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
     setState(() {
       _recordedVoicePath = null;
     });
+  }
+
+  void _onRadiusChanged(double value) {
+    setState(() {
+      _radius = value;
+    });
+    widget.onRadiusChanged(value);
+    HapticFeedback.selectionClick();
   }
 
   @override
@@ -119,6 +144,14 @@ class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
             onRecordingComplete: _onVoiceRecorded,
             onDelete: _onVoiceDeleted,
           ),
+          // 録音データがある場合のみ半径スライダーを表示
+          if (_recordedVoicePath != null) ...[
+            SizedBox(height: 16.h),
+            RadiusSlider(
+              radius: _radius,
+              onChanged: _onRadiusChanged,
+            ),
+          ],
           SizedBox(height: 20.h),
           // アクションボタン
           Row(
@@ -132,7 +165,7 @@ class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
               SizedBox(width: 16.w),
               Expanded(
                 child: FilledButton(
-                  onPressed: () => widget.onSave(_recordedVoicePath),
+                  onPressed: () => widget.onSave(_recordedVoicePath, _radius),
                   child: Text(
                     widget.isEditing
                         ? context.t.map.markerBottomSheet.close
