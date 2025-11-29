@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import 'package:hackathon_2025_app/features/finder/presentation/pages/finder_pag
 import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 
 import '../../features/auth/presentation/pages/welcome_page.dart';
+import '../../features/finder/presentation/pages/finder_web_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/map/presentation/pages/map_page.dart';
 import '../../features/map/presentation/pages/map_edit_page.dart';
@@ -14,11 +16,18 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
 
   return GoRouter(
-    initialLocation: WelcomePage.routeName,
+    initialLocation: kIsWeb ? FinderWebPage.routeName : WelcomePage.routeName,
     redirect: (context, state) {
       final user = authState.whenData((user) => user).value;
       final isLoggedIn = user != null;
       final isGoingToWelcome = state.matchedLocation == WelcomePage.routeName;
+      final isGoingToFinderWeb =
+          state.matchedLocation.startsWith(FinderWebPage.routeName);
+
+      // Web版のFinderページは認証不要
+      if (isGoingToFinderWeb) {
+        return null;
+      }
 
       // ログイン済みでWelcome画面に行こうとしている場合はMapEditへ
       if (isLoggedIn && isGoingToWelcome) {
@@ -73,6 +82,18 @@ final routerProvider = Provider<GoRouter>((ref) {
           return MaterialPage(
             key: state.pageKey,
             child: FinderPage(koemyaku: koemyaku),
+          );
+        },
+      ),
+      // Web用 Finder ページ（URLパラメータでkoemyakuIdを受け取る）
+      GoRoute(
+        path: '${FinderWebPage.routeName}/:koemyakuId',
+        name: FinderWebPage.name,
+        pageBuilder: (context, state) {
+          final koemyakuId = state.pathParameters['koemyakuId'] ?? '';
+          return MaterialPage(
+            key: state.pageKey,
+            child: FinderWebPage(koemyakuId: koemyakuId),
           );
         },
       ),

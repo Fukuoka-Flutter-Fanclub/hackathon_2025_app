@@ -42,6 +42,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsMapJa map = _TranslationsMapJa._(_root);
 	@override late final _TranslationsWelcomeJa welcome = _TranslationsWelcomeJa._(_root);
 	@override late final _TranslationsFinderJa finder = _TranslationsFinderJa._(_root);
+	@override late final _TranslationsFinderWebJa finderWeb = _TranslationsFinderWebJa._(_root);
 }
 
 // Path: common
@@ -135,6 +136,27 @@ class _TranslationsFinderJa implements TranslationsFinderEn {
 	@override String get noVoiceMarkers => '音声マーカーがありません';
 }
 
+// Path: finderWeb
+class _TranslationsFinderWebJa implements TranslationsFinderWebEn {
+	_TranslationsFinderWebJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get loading => '読み込み中...';
+	@override String get notFound => 'こえみゃくが見つかりませんでした';
+	@override String get permissionTitle => '位置情報とコンパスの許可';
+	@override String get permissionMessage => 'この機能を使用するには、位置情報とコンパス（方位センサー）へのアクセスを許可してください。';
+	@override String get permissionNote => 'iOSをお使いの場合は、下のボタンをタップして許可してください。';
+	@override String get grantPermission => '許可する';
+	@override String get permissionDenied => '許可が拒否されました';
+	@override String get permissionDeniedMessage => '位置情報またはコンパスへのアクセスが拒否されました。ブラウザの設定から許可してください。';
+	@override String get compassNotSupported => 'コンパスがサポートされていません';
+	@override String get compassNotSupportedMessage => 'このデバイスまたはブラウザではコンパスがサポートされていません。位置情報のみで案内します。';
+	@override String get continueAnyway => '続ける';
+	@override String get backToHome => 'ホームに戻る';
+}
+
 // Path: map.markerBottomSheet
 class _TranslationsMapMarkerBottomSheetJa implements TranslationsMapMarkerBottomSheetEn {
 	_TranslationsMapMarkerBottomSheetJa._(this._root);
@@ -215,6 +237,18 @@ extension on TranslationsJa {
 			'finder.error' => 'エラーが発生しました',
 			'finder.close' => '閉じる',
 			'finder.noVoiceMarkers' => '音声マーカーがありません',
+			'finderWeb.loading' => '読み込み中...',
+			'finderWeb.notFound' => 'こえみゃくが見つかりませんでした',
+			'finderWeb.permissionTitle' => '位置情報とコンパスの許可',
+			'finderWeb.permissionMessage' => 'この機能を使用するには、位置情報とコンパス（方位センサー）へのアクセスを許可してください。',
+			'finderWeb.permissionNote' => 'iOSをお使いの場合は、下のボタンをタップして許可してください。',
+			'finderWeb.grantPermission' => '許可する',
+			'finderWeb.permissionDenied' => '許可が拒否されました',
+			'finderWeb.permissionDeniedMessage' => '位置情報またはコンパスへのアクセスが拒否されました。ブラウザの設定から許可してください。',
+			'finderWeb.compassNotSupported' => 'コンパスがサポートされていません',
+			'finderWeb.compassNotSupportedMessage' => 'このデバイスまたはブラウザではコンパスがサポートされていません。位置情報のみで案内します。',
+			'finderWeb.continueAnyway' => '続ける',
+			'finderWeb.backToHome' => 'ホームに戻る',
 			_ => null,
 		};
 	}

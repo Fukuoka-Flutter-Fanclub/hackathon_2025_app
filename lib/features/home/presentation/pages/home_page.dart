@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hackathon_2025_app/features/finder/presentation/pages/finder_page.dart';
 import 'package:hackathon_2025_app/features/home/data/repositories/koemyaku_repository.dart';
 import 'package:hackathon_2025_app/features/home/domain/providers/koemyaku_list_provider.dart';
 import 'package:hackathon_2025_app/features/home/presentation/widgets/empty_state_widget.dart';
@@ -76,7 +77,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   void _onKoemyakuTap(KoemyakuData koemyaku) {
-    // TODO: Implement tap action (e.g., navigate to detail page)
+    context.push(FinderPage.routeName, extra: koemyaku);
   }
 
   Future<void> _onDelete(KoemyakuData koemyaku) async {
@@ -104,7 +105,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   void _onPlay(KoemyakuData koemyaku) {
-    // TODO: Implement play action
+    context.push(FinderPage.routeName, extra: koemyaku);
   }
 
   void _onShare(KoemyakuData koemyaku) {

@@ -42,6 +42,7 @@ class TranslationsZhTw with BaseTranslations<AppLocale, Translations> implements
 	@override late final _TranslationsMapZhTw map = _TranslationsMapZhTw._(_root);
 	@override late final _TranslationsWelcomeZhTw welcome = _TranslationsWelcomeZhTw._(_root);
 	@override late final _TranslationsFinderZhTw finder = _TranslationsFinderZhTw._(_root);
+	@override late final _TranslationsFinderWebZhTw finderWeb = _TranslationsFinderWebZhTw._(_root);
 }
 
 // Path: common
@@ -135,6 +136,27 @@ class _TranslationsFinderZhTw implements TranslationsFinderEn {
 	@override String get noVoiceMarkers => '找不到語音標記';
 }
 
+// Path: finderWeb
+class _TranslationsFinderWebZhTw implements TranslationsFinderWebEn {
+	_TranslationsFinderWebZhTw._(this._root);
+
+	final TranslationsZhTw _root; // ignore: unused_field
+
+	// Translations
+	@override String get loading => '載入中...';
+	@override String get notFound => '找不到聲脈';
+	@override String get permissionTitle => '位置和指南針權限';
+	@override String get permissionMessage => '要使用此功能，請允許存取您的位置和指南針（方向感應器）。';
+	@override String get permissionNote => '如果您使用的是 iOS，請點擊下方按鈕授予權限。';
+	@override String get grantPermission => '授予權限';
+	@override String get permissionDenied => '權限被拒絕';
+	@override String get permissionDeniedMessage => '位置或指南針的存取權限被拒絕。請在瀏覽器設定中允許。';
+	@override String get compassNotSupported => '不支援指南針';
+	@override String get compassNotSupportedMessage => '此裝置或瀏覽器不支援指南針。我們將僅使用位置資訊進行導航。';
+	@override String get continueAnyway => '繼續';
+	@override String get backToHome => '返回首頁';
+}
+
 // Path: map.markerBottomSheet
 class _TranslationsMapMarkerBottomSheetZhTw implements TranslationsMapMarkerBottomSheetEn {
 	_TranslationsMapMarkerBottomSheetZhTw._(this._root);
@@ -215,6 +237,18 @@ extension on TranslationsZhTw {
 			'finder.error' => '發生錯誤',
 			'finder.close' => '關閉',
 			'finder.noVoiceMarkers' => '找不到語音標記',
+			'finderWeb.loading' => '載入中...',
+			'finderWeb.notFound' => '找不到聲脈',
+			'finderWeb.permissionTitle' => '位置和指南針權限',
+			'finderWeb.permissionMessage' => '要使用此功能，請允許存取您的位置和指南針（方向感應器）。',
+			'finderWeb.permissionNote' => '如果您使用的是 iOS，請點擊下方按鈕授予權限。',
+			'finderWeb.grantPermission' => '授予權限',
+			'finderWeb.permissionDenied' => '權限被拒絕',
+			'finderWeb.permissionDeniedMessage' => '位置或指南針的存取權限被拒絕。請在瀏覽器設定中允許。',
+			'finderWeb.compassNotSupported' => '不支援指南針',
+			'finderWeb.compassNotSupportedMessage' => '此裝置或瀏覽器不支援指南針。我們將僅使用位置資訊進行導航。',
+			'finderWeb.continueAnyway' => '繼續',
+			'finderWeb.backToHome' => '返回首頁',
 			_ => null,
 		};
 	}

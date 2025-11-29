@@ -64,5 +64,19 @@
     "error": "エラーが発生しました",
     "close": "閉じる",
     "noVoiceMarkers": "音声マーカーがありません"
+  },
+  "finderWeb": {
+    "loading": "読み込み中...",
+    "notFound": "こえみゃくが見つかりませんでした",
+    "permissionTitle": "位置情報とコンパスの許可",
+    "permissionMessage": "この機能を使用するには、位置情報とコンパス（方位センサー）へのアクセスを許可してください。",
+    "permissionNote": "iOSをお使いの場合は、下のボタンをタップして許可してください。",
+    "grantPermission": "許可する",
+    "permissionDenied": "許可が拒否されました",
+    "permissionDeniedMessage": "位置情報またはコンパスへのアクセスが拒否されました。ブラウザの設定から許可してください。",
+    "compassNotSupported": "コンパスがサポートされていません",
+    "compassNotSupportedMessage": "このデバイスまたはブラウザではコンパスがサポートされていません。位置情報のみで案内します。",
+    "continueAnyway": "続ける",
+    "backToHome": "ホームに戻る"
   }
 }

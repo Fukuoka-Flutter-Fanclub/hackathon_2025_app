@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsMapEn map = TranslationsMapEn._(_root);
 	late final TranslationsWelcomeEn welcome = TranslationsWelcomeEn._(_root);
 	late final TranslationsFinderEn finder = TranslationsFinderEn._(_root);
+	late final TranslationsFinderWebEn finderWeb = TranslationsFinderWebEn._(_root);
 }
 
 // Path: common
@@ -228,6 +229,51 @@ class TranslationsFinderEn {
 	String get noVoiceMarkers => 'No voice markers found';
 }
 
+// Path: finderWeb
+class TranslationsFinderWebEn {
+	TranslationsFinderWebEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Loading...'
+	String get loading => 'Loading...';
+
+	/// en: 'KoeMyaku not found'
+	String get notFound => 'KoeMyaku not found';
+
+	/// en: 'Location and Compass Permission'
+	String get permissionTitle => 'Location and Compass Permission';
+
+	/// en: 'To use this feature, please allow access to your location and compass (orientation sensor).'
+	String get permissionMessage => 'To use this feature, please allow access to your location and compass (orientation sensor).';
+
+	/// en: 'If you're using iOS, please tap the button below to grant permission.'
+	String get permissionNote => 'If you\'re using iOS, please tap the button below to grant permission.';
+
+	/// en: 'Grant Permission'
+	String get grantPermission => 'Grant Permission';
+
+	/// en: 'Permission Denied'
+	String get permissionDenied => 'Permission Denied';
+
+	/// en: 'Access to location or compass was denied. Please allow it in your browser settings.'
+	String get permissionDeniedMessage => 'Access to location or compass was denied. Please allow it in your browser settings.';
+
+	/// en: 'Compass Not Supported'
+	String get compassNotSupported => 'Compass Not Supported';
+
+	/// en: 'Compass is not supported on this device or browser. We'll guide you using location only.'
+	String get compassNotSupportedMessage => 'Compass is not supported on this device or browser. We\'ll guide you using location only.';
+
+	/// en: 'Continue'
+	String get continueAnyway => 'Continue';
+
+	/// en: 'Back to Home'
+	String get backToHome => 'Back to Home';
+}
+
 // Path: map.markerBottomSheet
 class TranslationsMapMarkerBottomSheetEn {
 	TranslationsMapMarkerBottomSheetEn._(this._root);
@@ -326,6 +372,18 @@ extension on Translations {
 			'finder.error' => 'An error occurred',
 			'finder.close' => 'Close',
 			'finder.noVoiceMarkers' => 'No voice markers found',
+			'finderWeb.loading' => 'Loading...',
+			'finderWeb.notFound' => 'KoeMyaku not found',
+			'finderWeb.permissionTitle' => 'Location and Compass Permission',
+			'finderWeb.permissionMessage' => 'To use this feature, please allow access to your location and compass (orientation sensor).',
+			'finderWeb.permissionNote' => 'If you\'re using iOS, please tap the button below to grant permission.',
+			'finderWeb.grantPermission' => 'Grant Permission',
+			'finderWeb.permissionDenied' => 'Permission Denied',
+			'finderWeb.permissionDeniedMessage' => 'Access to location or compass was denied. Please allow it in your browser settings.',
+			'finderWeb.compassNotSupported' => 'Compass Not Supported',
+			'finderWeb.compassNotSupportedMessage' => 'Compass is not supported on this device or browser. We\'ll guide you using location only.',
+			'finderWeb.continueAnyway' => 'Continue',
+			'finderWeb.backToHome' => 'Back to Home',
 			_ => null,
 		};
 	}

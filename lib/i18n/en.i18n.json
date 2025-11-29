@@ -64,5 +64,19 @@
     "error": "An error occurred",
     "close": "Close",
     "noVoiceMarkers": "No voice markers found"
+  },
+  "finderWeb": {
+    "loading": "Loading...",
+    "notFound": "KoeMyaku not found",
+    "permissionTitle": "Location and Compass Permission",
+    "permissionMessage": "To use this feature, please allow access to your location and compass (orientation sensor).",
+    "permissionNote": "If you're using iOS, please tap the button below to grant permission.",
+    "grantPermission": "Grant Permission",
+    "permissionDenied": "Permission Denied",
+    "permissionDeniedMessage": "Access to location or compass was denied. Please allow it in your browser settings.",
+    "compassNotSupported": "Compass Not Supported",
+    "compassNotSupportedMessage": "Compass is not supported on this device or browser. We'll guide you using location only.",
+    "continueAnyway": "Continue",
+    "backToHome": "Back to Home"
   }
 }

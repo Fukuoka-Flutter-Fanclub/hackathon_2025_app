@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 enum LocationPermissionStatus { granted, denied, permanentlyDenied, restricted }
+
+enum BackgroundLocationPermissionStatus { granted, denied, restricted }
 
 /// LocationServiceのProvider
 final locationServiceProvider = Provider<LocationService>((ref) {
@@ -99,13 +100,96 @@ class LocationService {
   Stream<Position> getPositionStream({
     LocationAccuracy accuracy = LocationAccuracy.high,
     int distanceFilter = 5,
+    bool enableBackgroundMode = false,
   }) {
-    return Geolocator.getPositionStream(
-      locationSettings: LocationSettings(
+    late LocationSettings locationSettings;
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = AndroidSettings(
         accuracy: accuracy,
         distanceFilter: distanceFilter,
-      ),
-    );
+        foregroundNotificationConfig: enableBackgroundMode
+            ? const ForegroundNotificationConfig(
+                notificationText: '位置情報を取得中...',
+                notificationTitle: 'KoeMyaku',
+                enableWakeLock: true,
+              )
+            : null,
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      locationSettings = AppleSettings(
+        accuracy: accuracy,
+        distanceFilter: distanceFilter,
+        activityType: ActivityType.fitness,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: enableBackgroundMode,
+        allowBackgroundLocationUpdates: enableBackgroundMode,
+      );
+    } else {
+      locationSettings = LocationSettings(
+        accuracy: accuracy,
+        distanceFilter: distanceFilter,
+      );
+    }
+
+    return Geolocator.getPositionStream(locationSettings: locationSettings);
+  }
+
+  /// バックグラウンド位置情報の権限をチェック
+  Future<BackgroundLocationPermissionStatus>
+      checkBackgroundLocationPermission() async {
+    try {
+      final permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.always) {
+        return BackgroundLocationPermissionStatus.granted;
+      } else if (permission == LocationPermission.deniedForever) {
+        return BackgroundLocationPermissionStatus.restricted;
+      }
+      return BackgroundLocationPermissionStatus.denied;
+    } catch (e) {
+      debugPrint('Background location permission check failed: $e');
+      return BackgroundLocationPermissionStatus.restricted;
+    }
+  }
+
+  /// バックグラウンド位置情報の権限をリクエスト
+  /// Androidでは「常に許可」を選択する必要がある
+  Future<BackgroundLocationPermissionStatus>
+      requestBackgroundLocationPermission() async {
+    try {
+      // まず通常の位置情報権限があるか確認
+      final foregroundStatus = await checkLocationPermission();
+      if (foregroundStatus != LocationPermissionStatus.granted) {
+        await requestLocationPermission();
+      }
+
+      // バックグラウンド権限をリクエスト
+      final permission = await Permission.locationAlways.request();
+      if (permission.isGranted) {
+        return BackgroundLocationPermissionStatus.granted;
+      } else if (permission.isPermanentlyDenied) {
+        return BackgroundLocationPermissionStatus.restricted;
+      }
+      return BackgroundLocationPermissionStatus.denied;
+    } catch (e) {
+      debugPrint('Background location permission request failed: $e');
+      return BackgroundLocationPermissionStatus.restricted;
+    }
+  }
+
+  /// バックグラウンド位置情報の権限を確認し、必要であればリクエストする
+  Future<bool> ensureBackgroundLocationPermission() async {
+    var status = await checkBackgroundLocationPermission();
+    if (status == BackgroundLocationPermissionStatus.granted) {
+      return true;
+    }
+
+    if (status == BackgroundLocationPermissionStatus.denied) {
+      status = await requestBackgroundLocationPermission();
+    }
+
+    return status == BackgroundLocationPermissionStatus.granted;
   }
 
   /// 位置情報の権限を確認し、必要であればリクエストする

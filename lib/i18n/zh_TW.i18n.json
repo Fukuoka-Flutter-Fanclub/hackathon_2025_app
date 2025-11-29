@@ -48,5 +48,35 @@
     "subtitle": "用聲音保存地點的記憶",
     "description": "在地圖上留下語音備忘，\n創建屬於您的聲音地圖",
     "startButton": "開始使用"
+  },
+  "finder": {
+    "initializing": "取得位置中...",
+    "findingVoice": "尋找聲音 ($index/$total)",
+    "distanceAway": "之外",
+    "skip": "跳過",
+    "skipToNext": "跳到下一個",
+    "arrived": "已到達！",
+    "allCompleted": "全部完成！",
+    "allCompletedMessage": "已聆聽所有聲音",
+    "completedTitle": "完成",
+    "completedMessage": "已聆聽所有聲脈！辛苦了。",
+    "finish": "結束",
+    "error": "發生錯誤",
+    "close": "關閉",
+    "noVoiceMarkers": "找不到語音標記"
+  },
+  "finderWeb": {
+    "loading": "載入中...",
+    "notFound": "找不到聲脈",
+    "permissionTitle": "位置和指南針權限",
+    "permissionMessage": "要使用此功能，請允許存取您的位置和指南針（方向感應器）。",
+    "permissionNote": "如果您使用的是 iOS，請點擊下方按鈕授予權限。",
+    "grantPermission": "授予權限",
+    "permissionDenied": "權限被拒絕",
+    "permissionDeniedMessage": "位置或指南針的存取權限被拒絕。請在瀏覽器設定中允許。",
+    "compassNotSupported": "不支援指南針",
+    "compassNotSupportedMessage": "此裝置或瀏覽器不支援指南針。我們將僅使用位置資訊進行導航。",
+    "continueAnyway": "繼續",
+    "backToHome": "返回首頁"
   }
 }
