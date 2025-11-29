@@ -7,7 +7,9 @@
       "longitude": "Longitude",
       "delete": "Delete",
       "save": "Save",
-      "close": "Close"
+      "close": "Close",
+      "rangeLabel": "Range",
+      "rangeUnit": "m"
     }
   }
 }

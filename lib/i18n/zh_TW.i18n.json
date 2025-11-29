@@ -7,7 +7,9 @@
       "longitude": "經度",
       "delete": "刪除",
       "save": "儲存",
-      "close": "關閉"
+      "close": "關閉",
+      "rangeLabel": "範圍",
+      "rangeUnit": "m"
     }
   }
 }

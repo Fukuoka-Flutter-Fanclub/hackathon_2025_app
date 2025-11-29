@@ -64,6 +64,8 @@ class _TranslationsMapMarkerBottomSheetZhTw implements TranslationsMapMarkerBott
 	@override String get delete => '刪除';
 	@override String get save => '儲存';
 	@override String get close => '關閉';
+	@override String get rangeLabel => '範圍';
+	@override String get rangeUnit => 'm';
 }
 
 /// The flat map containing all translations for locale <zh-TW>.
@@ -81,6 +83,8 @@ extension on TranslationsZhTw {
 			'map.markerBottomSheet.delete' => '刪除',
 			'map.markerBottomSheet.save' => '儲存',
 			'map.markerBottomSheet.close' => '關閉',
+			'map.markerBottomSheet.rangeLabel' => '範圍',
+			'map.markerBottomSheet.rangeUnit' => 'm',
 			_ => null,
 		};
 	}

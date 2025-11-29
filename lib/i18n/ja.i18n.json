@@ -7,7 +7,9 @@
       "longitude": "経度",
       "delete": "削除",
       "save": "保存",
-      "close": "閉じる"
+      "close": "閉じる",
+      "rangeLabel": "範囲",
+      "rangeUnit": "m"
     }
   }
 }

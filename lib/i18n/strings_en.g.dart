@@ -81,6 +81,12 @@ class TranslationsMapMarkerBottomSheetEn {
 
 	/// en: 'Close'
 	String get close => 'Close';
+
+	/// en: 'Range'
+	String get rangeLabel => 'Range';
+
+	/// en: 'm'
+	String get rangeUnit => 'm';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -98,6 +104,8 @@ extension on Translations {
 			'map.markerBottomSheet.delete' => 'Delete',
 			'map.markerBottomSheet.save' => 'Save',
 			'map.markerBottomSheet.close' => 'Close',
+			'map.markerBottomSheet.rangeLabel' => 'Range',
+			'map.markerBottomSheet.rangeUnit' => 'm',
 			_ => null,
 		};
 	}

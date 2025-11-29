@@ -64,6 +64,8 @@ class _TranslationsMapMarkerBottomSheetJa implements TranslationsMapMarkerBottom
 	@override String get delete => '削除';
 	@override String get save => '保存';
 	@override String get close => '閉じる';
+	@override String get rangeLabel => '範囲';
+	@override String get rangeUnit => 'm';
 }
 
 /// The flat map containing all translations for locale <ja>.
@@ -81,6 +83,8 @@ extension on TranslationsJa {
 			'map.markerBottomSheet.delete' => '削除',
 			'map.markerBottomSheet.save' => '保存',
 			'map.markerBottomSheet.close' => '閉じる',
+			'map.markerBottomSheet.rangeLabel' => '範囲',
+			'map.markerBottomSheet.rangeUnit' => 'm',
 			_ => null,
 		};
 	}
