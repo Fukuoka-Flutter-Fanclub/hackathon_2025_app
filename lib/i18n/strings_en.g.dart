@@ -64,6 +64,9 @@ class TranslationsMapMarkerBottomSheetEn {
 	/// en: 'Add a pin to this location?'
 	String get addPinConfirmation => 'Add a pin to this location?';
 
+	/// en: 'Edit this pin?'
+	String get editPinConfirmation => 'Edit this pin?';
+
 	/// en: 'Latitude'
 	String get latitude => 'Latitude';
 
@@ -75,6 +78,9 @@ class TranslationsMapMarkerBottomSheetEn {
 
 	/// en: 'Save'
 	String get save => 'Save';
+
+	/// en: 'Close'
+	String get close => 'Close';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -86,10 +92,12 @@ extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'map.markerBottomSheet.addPinConfirmation' => 'Add a pin to this location?',
+			'map.markerBottomSheet.editPinConfirmation' => 'Edit this pin?',
 			'map.markerBottomSheet.latitude' => 'Latitude',
 			'map.markerBottomSheet.longitude' => 'Longitude',
 			'map.markerBottomSheet.delete' => 'Delete',
 			'map.markerBottomSheet.save' => 'Save',
+			'map.markerBottomSheet.close' => 'Close',
 			_ => null,
 		};
 	}

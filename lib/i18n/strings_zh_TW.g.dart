@@ -58,10 +58,12 @@ class _TranslationsMapMarkerBottomSheetZhTw implements TranslationsMapMarkerBott
 
 	// Translations
 	@override String get addPinConfirmation => '要在此位置新增圖釘嗎？';
+	@override String get editPinConfirmation => '要編輯此圖釘嗎？';
 	@override String get latitude => '緯度';
 	@override String get longitude => '經度';
 	@override String get delete => '刪除';
 	@override String get save => '儲存';
+	@override String get close => '關閉';
 }
 
 /// The flat map containing all translations for locale <zh-TW>.
@@ -73,10 +75,12 @@ extension on TranslationsZhTw {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'map.markerBottomSheet.addPinConfirmation' => '要在此位置新增圖釘嗎？',
+			'map.markerBottomSheet.editPinConfirmation' => '要編輯此圖釘嗎？',
 			'map.markerBottomSheet.latitude' => '緯度',
 			'map.markerBottomSheet.longitude' => '經度',
 			'map.markerBottomSheet.delete' => '刪除',
 			'map.markerBottomSheet.save' => '儲存',
+			'map.markerBottomSheet.close' => '關閉',
 			_ => null,
 		};
 	}

@@ -58,10 +58,12 @@ class _TranslationsMapMarkerBottomSheetJa implements TranslationsMapMarkerBottom
 
 	// Translations
 	@override String get addPinConfirmation => 'この場所にピンを追加しますか？';
+	@override String get editPinConfirmation => 'このピンを編集しますか？';
 	@override String get latitude => '緯度';
 	@override String get longitude => '経度';
 	@override String get delete => '削除';
 	@override String get save => '保存';
+	@override String get close => '閉じる';
 }
 
 /// The flat map containing all translations for locale <ja>.
@@ -73,10 +75,12 @@ extension on TranslationsJa {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'map.markerBottomSheet.addPinConfirmation' => 'この場所にピンを追加しますか？',
+			'map.markerBottomSheet.editPinConfirmation' => 'このピンを編集しますか？',
 			'map.markerBottomSheet.latitude' => '緯度',
 			'map.markerBottomSheet.longitude' => '経度',
 			'map.markerBottomSheet.delete' => '削除',
 			'map.markerBottomSheet.save' => '保存',
+			'map.markerBottomSheet.close' => '閉じる',
 			_ => null,
 		};
 	}

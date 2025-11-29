@@ -2,10 +2,12 @@
   "map": {
     "markerBottomSheet": {
       "addPinConfirmation": "要在此位置新增圖釘嗎？",
+      "editPinConfirmation": "要編輯此圖釘嗎？",
       "latitude": "緯度",
       "longitude": "經度",
       "delete": "刪除",
-      "save": "儲存"
+      "save": "儲存",
+      "close": "關閉"
     }
   }
 }

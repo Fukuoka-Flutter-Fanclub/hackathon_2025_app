@@ -2,10 +2,12 @@
   "map": {
     "markerBottomSheet": {
       "addPinConfirmation": "Add a pin to this location?",
+      "editPinConfirmation": "Edit this pin?",
       "latitude": "Latitude",
       "longitude": "Longitude",
       "delete": "Delete",
-      "save": "Save"
+      "save": "Save",
+      "close": "Close"
     }
   }
 }
