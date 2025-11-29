@@ -23,7 +23,6 @@ void main() {
 
       // Initialize Firebase
       await Firebase.initializeApp(
-        name: 'KoeMyaku',
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
@@ -43,7 +42,14 @@ void main() {
       runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
     },
     (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      // Firebaseが初期化されている場合のみCrashlyticsに報告
+      if (Firebase.apps.isNotEmpty) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      } else {
+        // Firebase初期化前のエラーはコンソールに出力
+        debugPrint('Error before Firebase init: $error');
+        debugPrint('$stack');
+      }
     },
   );
 }
