@@ -48,5 +48,21 @@
     "subtitle": "声で残す、場所の記憶",
     "description": "地図上に音声メモを残して、\nあなただけの声の地図を作りましょう",
     "startButton": "はじめる"
+  },
+  "finder": {
+    "initializing": "位置情報を取得中...",
+    "findingVoice": "声を探しています ($index/$total)",
+    "distanceAway": "先にあります",
+    "skip": "スキップ",
+    "skipToNext": "次へスキップ",
+    "arrived": "到着しました！",
+    "allCompleted": "すべて完了！",
+    "allCompletedMessage": "すべての声を聴きました",
+    "completedTitle": "完了",
+    "completedMessage": "すべてのこえみゃくを聴きました！お疲れ様でした。",
+    "finish": "終了",
+    "error": "エラーが発生しました",
+    "close": "閉じる",
+    "noVoiceMarkers": "音声マーカーがありません"
   }
 }

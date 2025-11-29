@@ -41,6 +41,7 @@ class TranslationsZhTw with BaseTranslations<AppLocale, Translations> implements
 	@override late final _TranslationsHomeZhTw home = _TranslationsHomeZhTw._(_root);
 	@override late final _TranslationsMapZhTw map = _TranslationsMapZhTw._(_root);
 	@override late final _TranslationsWelcomeZhTw welcome = _TranslationsWelcomeZhTw._(_root);
+	@override late final _TranslationsFinderZhTw finder = _TranslationsFinderZhTw._(_root);
 }
 
 // Path: common
@@ -111,6 +112,29 @@ class _TranslationsWelcomeZhTw implements TranslationsWelcomeEn {
 	@override String get startButton => '開始使用';
 }
 
+// Path: finder
+class _TranslationsFinderZhTw implements TranslationsFinderEn {
+	_TranslationsFinderZhTw._(this._root);
+
+	final TranslationsZhTw _root; // ignore: unused_field
+
+	// Translations
+	@override String get initializing => '取得位置中...';
+	@override String findingVoice({required Object index, required Object total}) => '尋找聲音 (${index}/${total})';
+	@override String get distanceAway => '之外';
+	@override String get skip => '跳過';
+	@override String get skipToNext => '跳到下一個';
+	@override String get arrived => '已到達！';
+	@override String get allCompleted => '全部完成！';
+	@override String get allCompletedMessage => '已聆聽所有聲音';
+	@override String get completedTitle => '完成';
+	@override String get completedMessage => '已聆聽所有聲脈！辛苦了。';
+	@override String get finish => '結束';
+	@override String get error => '發生錯誤';
+	@override String get close => '關閉';
+	@override String get noVoiceMarkers => '找不到語音標記';
+}
+
 // Path: map.markerBottomSheet
 class _TranslationsMapMarkerBottomSheetZhTw implements TranslationsMapMarkerBottomSheetEn {
 	_TranslationsMapMarkerBottomSheetZhTw._(this._root);
@@ -177,6 +201,20 @@ extension on TranslationsZhTw {
 			'welcome.subtitle' => '用聲音保存地點的記憶',
 			'welcome.description' => '在地圖上留下語音備忘，\n創建屬於您的聲音地圖',
 			'welcome.startButton' => '開始使用',
+			'finder.initializing' => '取得位置中...',
+			'finder.findingVoice' => ({required Object index, required Object total}) => '尋找聲音 (${index}/${total})',
+			'finder.distanceAway' => '之外',
+			'finder.skip' => '跳過',
+			'finder.skipToNext' => '跳到下一個',
+			'finder.arrived' => '已到達！',
+			'finder.allCompleted' => '全部完成！',
+			'finder.allCompletedMessage' => '已聆聽所有聲音',
+			'finder.completedTitle' => '完成',
+			'finder.completedMessage' => '已聆聽所有聲脈！辛苦了。',
+			'finder.finish' => '結束',
+			'finder.error' => '發生錯誤',
+			'finder.close' => '關閉',
+			'finder.noVoiceMarkers' => '找不到語音標記',
 			_ => null,
 		};
 	}

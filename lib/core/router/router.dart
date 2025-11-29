@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hackathon_2025_app/core/services/auth_service.dart';
+import 'package:hackathon_2025_app/features/finder/presentation/pages/finder_page.dart';
 import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 
 import '../../features/auth/presentation/pages/welcome_page.dart';
@@ -61,6 +62,17 @@ final routerProvider = Provider<GoRouter>((ref) {
           return MaterialPage(
             key: state.pageKey,
             child: MapEditPage(editingKoemyaku: koemyaku),
+          );
+        },
+      ),
+      GoRoute(
+        path: FinderPage.routeName,
+        name: FinderPage.name,
+        pageBuilder: (context, state) {
+          final koemyaku = state.extra as KoemyakuData;
+          return MaterialPage(
+            key: state.pageKey,
+            child: FinderPage(koemyaku: koemyaku),
           );
         },
       ),

@@ -41,6 +41,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsHomeJa home = _TranslationsHomeJa._(_root);
 	@override late final _TranslationsMapJa map = _TranslationsMapJa._(_root);
 	@override late final _TranslationsWelcomeJa welcome = _TranslationsWelcomeJa._(_root);
+	@override late final _TranslationsFinderJa finder = _TranslationsFinderJa._(_root);
 }
 
 // Path: common
@@ -111,6 +112,29 @@ class _TranslationsWelcomeJa implements TranslationsWelcomeEn {
 	@override String get startButton => 'はじめる';
 }
 
+// Path: finder
+class _TranslationsFinderJa implements TranslationsFinderEn {
+	_TranslationsFinderJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get initializing => '位置情報を取得中...';
+	@override String findingVoice({required Object index, required Object total}) => '声を探しています (${index}/${total})';
+	@override String get distanceAway => '先にあります';
+	@override String get skip => 'スキップ';
+	@override String get skipToNext => '次へスキップ';
+	@override String get arrived => '到着しました！';
+	@override String get allCompleted => 'すべて完了！';
+	@override String get allCompletedMessage => 'すべての声を聴きました';
+	@override String get completedTitle => '完了';
+	@override String get completedMessage => 'すべてのこえみゃくを聴きました！お疲れ様でした。';
+	@override String get finish => '終了';
+	@override String get error => 'エラーが発生しました';
+	@override String get close => '閉じる';
+	@override String get noVoiceMarkers => '音声マーカーがありません';
+}
+
 // Path: map.markerBottomSheet
 class _TranslationsMapMarkerBottomSheetJa implements TranslationsMapMarkerBottomSheetEn {
 	_TranslationsMapMarkerBottomSheetJa._(this._root);
@@ -177,6 +201,20 @@ extension on TranslationsJa {
 			'welcome.subtitle' => '声で残す、場所の記憶',
 			'welcome.description' => '地図上に音声メモを残して、\nあなただけの声の地図を作りましょう',
 			'welcome.startButton' => 'はじめる',
+			'finder.initializing' => '位置情報を取得中...',
+			'finder.findingVoice' => ({required Object index, required Object total}) => '声を探しています (${index}/${total})',
+			'finder.distanceAway' => '先にあります',
+			'finder.skip' => 'スキップ',
+			'finder.skipToNext' => '次へスキップ',
+			'finder.arrived' => '到着しました！',
+			'finder.allCompleted' => 'すべて完了！',
+			'finder.allCompletedMessage' => 'すべての声を聴きました',
+			'finder.completedTitle' => '完了',
+			'finder.completedMessage' => 'すべてのこえみゃくを聴きました！お疲れ様でした。',
+			'finder.finish' => '終了',
+			'finder.error' => 'エラーが発生しました',
+			'finder.close' => '閉じる',
+			'finder.noVoiceMarkers' => '音声マーカーがありません',
 			_ => null,
 		};
 	}

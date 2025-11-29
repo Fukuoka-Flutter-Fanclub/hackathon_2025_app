@@ -44,6 +44,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsHomeEn home = TranslationsHomeEn._(_root);
 	late final TranslationsMapEn map = TranslationsMapEn._(_root);
 	late final TranslationsWelcomeEn welcome = TranslationsWelcomeEn._(_root);
+	late final TranslationsFinderEn finder = TranslationsFinderEn._(_root);
 }
 
 // Path: common
@@ -176,6 +177,57 @@ class TranslationsWelcomeEn {
 	String get startButton => 'Get Started';
 }
 
+// Path: finder
+class TranslationsFinderEn {
+	TranslationsFinderEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Getting location...'
+	String get initializing => 'Getting location...';
+
+	/// en: 'Finding voice ($index/$total)'
+	String findingVoice({required Object index, required Object total}) => 'Finding voice (${index}/${total})';
+
+	/// en: 'away'
+	String get distanceAway => 'away';
+
+	/// en: 'Skip'
+	String get skip => 'Skip';
+
+	/// en: 'Skip to next'
+	String get skipToNext => 'Skip to next';
+
+	/// en: 'You've arrived!'
+	String get arrived => 'You\'ve arrived!';
+
+	/// en: 'All done!'
+	String get allCompleted => 'All done!';
+
+	/// en: 'You've listened to all voices'
+	String get allCompletedMessage => 'You\'ve listened to all voices';
+
+	/// en: 'Completed'
+	String get completedTitle => 'Completed';
+
+	/// en: 'You've listened to all KoeMyaku! Great job.'
+	String get completedMessage => 'You\'ve listened to all KoeMyaku! Great job.';
+
+	/// en: 'Finish'
+	String get finish => 'Finish';
+
+	/// en: 'An error occurred'
+	String get error => 'An error occurred';
+
+	/// en: 'Close'
+	String get close => 'Close';
+
+	/// en: 'No voice markers found'
+	String get noVoiceMarkers => 'No voice markers found';
+}
+
 // Path: map.markerBottomSheet
 class TranslationsMapMarkerBottomSheetEn {
 	TranslationsMapMarkerBottomSheetEn._(this._root);
@@ -260,6 +312,20 @@ extension on Translations {
 			'welcome.subtitle' => 'Memories of places, preserved in voice',
 			'welcome.description' => 'Leave voice memos on the map\nand create your own voice map',
 			'welcome.startButton' => 'Get Started',
+			'finder.initializing' => 'Getting location...',
+			'finder.findingVoice' => ({required Object index, required Object total}) => 'Finding voice (${index}/${total})',
+			'finder.distanceAway' => 'away',
+			'finder.skip' => 'Skip',
+			'finder.skipToNext' => 'Skip to next',
+			'finder.arrived' => 'You\'ve arrived!',
+			'finder.allCompleted' => 'All done!',
+			'finder.allCompletedMessage' => 'You\'ve listened to all voices',
+			'finder.completedTitle' => 'Completed',
+			'finder.completedMessage' => 'You\'ve listened to all KoeMyaku! Great job.',
+			'finder.finish' => 'Finish',
+			'finder.error' => 'An error occurred',
+			'finder.close' => 'Close',
+			'finder.noVoiceMarkers' => 'No voice markers found',
 			_ => null,
 		};
 	}

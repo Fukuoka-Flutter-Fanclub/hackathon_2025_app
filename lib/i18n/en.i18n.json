@@ -48,5 +48,21 @@
     "subtitle": "Memories of places, preserved in voice",
     "description": "Leave voice memos on the map\nand create your own voice map",
     "startButton": "Get Started"
+  },
+  "finder": {
+    "initializing": "Getting location...",
+    "findingVoice": "Finding voice ($index/$total)",
+    "distanceAway": "away",
+    "skip": "Skip",
+    "skipToNext": "Skip to next",
+    "arrived": "You've arrived!",
+    "allCompleted": "All done!",
+    "allCompletedMessage": "You've listened to all voices",
+    "completedTitle": "Completed",
+    "completedMessage": "You've listened to all KoeMyaku! Great job.",
+    "finish": "Finish",
+    "error": "An error occurred",
+    "close": "Close",
+    "noVoiceMarkers": "No voice markers found"
   }
 }

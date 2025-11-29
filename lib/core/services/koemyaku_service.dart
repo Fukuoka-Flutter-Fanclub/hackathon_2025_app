@@ -93,6 +93,20 @@ class KoemyakuService {
     return koemyaku;
   }
 
+  /// IDでKoemyakuを取得
+  Future<KoemyakuData?> getKoemyakuById(String id) async {
+    try {
+      final doc = await _koemyakuCollection.doc(id).get();
+      if (!doc.exists) {
+        return null;
+      }
+      return KoemyakuData.fromFirestore(doc);
+    } catch (e) {
+      debugPrint('Failed to get koemyaku by id: $e');
+      return null;
+    }
+  }
+
   /// ユーザーのKoemyaku一覧を取得
   Future<List<KoemyakuData>> getKoemyakuList(String userId) async {
     final snapshot = await _koemyakuCollection
