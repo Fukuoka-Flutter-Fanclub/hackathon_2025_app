@@ -14,14 +14,32 @@ class SaveKoemyakuResult {
 
 /// Koemyaku保存ダイアログ
 class SaveKoemyakuDialog extends StatefulWidget {
-  const SaveKoemyakuDialog({super.key});
+  const SaveKoemyakuDialog({
+    super.key,
+    this.initialTitle,
+    this.initialMessage,
+    this.isEditing = false,
+  });
+
+  final String? initialTitle;
+  final String? initialMessage;
+  final bool isEditing;
 
   /// ダイアログを表示
-  static Future<SaveKoemyakuResult?> show(BuildContext context) {
+  static Future<SaveKoemyakuResult?> show(
+    BuildContext context, {
+    String? initialTitle,
+    String? initialMessage,
+    bool isEditing = false,
+  }) {
     return showDialog<SaveKoemyakuResult>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const SaveKoemyakuDialog(),
+      builder: (context) => SaveKoemyakuDialog(
+        initialTitle: initialTitle,
+        initialMessage: initialMessage,
+        isEditing: isEditing,
+      ),
     );
   }
 
@@ -31,8 +49,15 @@ class SaveKoemyakuDialog extends StatefulWidget {
 
 class _SaveKoemyakuDialogState extends State<SaveKoemyakuDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _messageController = TextEditingController();
+  late final TextEditingController _titleController;
+  late final TextEditingController _messageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController(text: widget.initialTitle ?? '');
+    _messageController = TextEditingController(text: widget.initialMessage ?? '');
+  }
 
   @override
   void dispose() {
@@ -55,7 +80,7 @@ class _SaveKoemyakuDialogState extends State<SaveKoemyakuDialog> {
     final t = Translations.of(context);
 
     return AlertDialog(
-      title: Text(t.map.saveKoemyaku),
+      title: Text(widget.isEditing ? t.home.editKoemyaku : t.map.saveKoemyaku),
       content: Form(
         key: _formKey,
         child: Column(

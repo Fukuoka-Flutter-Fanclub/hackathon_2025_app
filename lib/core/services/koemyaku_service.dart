@@ -105,6 +105,35 @@ class KoemyakuService {
         .toList();
   }
 
+  /// Koemyakuを更新
+  Future<KoemyakuData> updateKoemyaku({
+    required String id,
+    required String userId,
+    required String title,
+    required String message,
+    required List<MarkerData> markers,
+    required DateTime createdAt,
+  }) async {
+    // 音声ファイルをアップロード
+    final uploadedMarkers = await _uploadMarkerVoices(markers);
+
+    final koemyaku = KoemyakuData(
+      id: id,
+      userId: userId,
+      title: title,
+      message: message,
+      markers: uploadedMarkers,
+      createdAt: createdAt,
+      updatedAt: DateTime.now(),
+    );
+
+    // Firestoreに更新
+    await _koemyakuCollection.doc(id).update(koemyaku.toFirestore());
+
+    debugPrint('Koemyaku updated: $id');
+    return koemyaku;
+  }
+
   /// Koemyakuを削除
   Future<void> deleteKoemyaku(String id) async {
     await _koemyakuCollection.doc(id).delete();

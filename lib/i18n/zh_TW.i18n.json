@@ -4,6 +4,24 @@
     "save": "儲存",
     "saving": "儲存中..."
   },
+  "home": {
+    "title": "聲脈",
+    "emptyTitle": "還沒有聲脈",
+    "emptyMessage": "在地圖上新增圖釘\n並留下語音備忘",
+    "errorLoading": "載入失敗",
+    "retry": "重試",
+    "play": "播放",
+    "share": "分享",
+    "shareSubject": "分享聲脈",
+    "delete": "刪除",
+    "deleteConfirmTitle": "確認刪除",
+    "deleteConfirmMessage": "確定要刪除這個聲脈嗎？",
+    "deleteSuccess": "刪除成功",
+    "deleteError": "刪除失敗",
+    "editKoemyaku": "編輯聲脈",
+    "updateSuccess": "更新成功",
+    "updateError": "更新失敗"
+  },
   "map": {
     "markerBottomSheet": {
       "addPinConfirmation": "要在此位置新增圖釘嗎？",

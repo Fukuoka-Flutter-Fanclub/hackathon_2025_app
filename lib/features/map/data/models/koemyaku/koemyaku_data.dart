@@ -50,9 +50,20 @@ abstract class KoemyakuData with _$KoemyakuData {
   /// Firestore ドキュメントから作成
   factory KoemyakuData.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+
+    // markersのcreatedAtをTimestampからDateTimeに変換
+    final markers = (data['markers'] as List<dynamic>?)?.map((marker) {
+      final markerMap = Map<String, dynamic>.from(marker as Map);
+      if (markerMap['createdAt'] is Timestamp) {
+        markerMap['createdAt'] = (markerMap['createdAt'] as Timestamp).toDate().toIso8601String();
+      }
+      return markerMap;
+    }).toList();
+
     return KoemyakuData.fromJson({
       ...data,
       'id': doc.id,
+      'markers': markers ?? [],
     });
   }
 

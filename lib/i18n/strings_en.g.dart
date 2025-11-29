@@ -41,6 +41,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	// Translations
 	late final TranslationsCommonEn common = TranslationsCommonEn._(_root);
+	late final TranslationsHomeEn home = TranslationsHomeEn._(_root);
 	late final TranslationsMapEn map = TranslationsMapEn._(_root);
 	late final TranslationsWelcomeEn welcome = TranslationsWelcomeEn._(_root);
 }
@@ -61,6 +62,63 @@ class TranslationsCommonEn {
 
 	/// en: 'Saving...'
 	String get saving => 'Saving...';
+}
+
+// Path: home
+class TranslationsHomeEn {
+	TranslationsHomeEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'KoeMyaku'
+	String get title => 'KoeMyaku';
+
+	/// en: 'No KoeMyaku yet'
+	String get emptyTitle => 'No KoeMyaku yet';
+
+	/// en: 'Add pins on the map and leave voice memos'
+	String get emptyMessage => 'Add pins on the map\nand leave voice memos';
+
+	/// en: 'Failed to load'
+	String get errorLoading => 'Failed to load';
+
+	/// en: 'Retry'
+	String get retry => 'Retry';
+
+	/// en: 'Play'
+	String get play => 'Play';
+
+	/// en: 'Share'
+	String get share => 'Share';
+
+	/// en: 'Share KoeMyaku'
+	String get shareSubject => 'Share KoeMyaku';
+
+	/// en: 'Delete'
+	String get delete => 'Delete';
+
+	/// en: 'Confirm Delete'
+	String get deleteConfirmTitle => 'Confirm Delete';
+
+	/// en: 'Are you sure you want to delete this KoeMyaku?'
+	String get deleteConfirmMessage => 'Are you sure you want to delete this KoeMyaku?';
+
+	/// en: 'Deleted successfully'
+	String get deleteSuccess => 'Deleted successfully';
+
+	/// en: 'Failed to delete'
+	String get deleteError => 'Failed to delete';
+
+	/// en: 'Edit KoeMyaku'
+	String get editKoemyaku => 'Edit KoeMyaku';
+
+	/// en: 'Updated successfully'
+	String get updateSuccess => 'Updated successfully';
+
+	/// en: 'Failed to update'
+	String get updateError => 'Failed to update';
 }
 
 // Path: map
@@ -165,6 +223,22 @@ extension on Translations {
 			'common.cancel' => 'Cancel',
 			'common.save' => 'Save',
 			'common.saving' => 'Saving...',
+			'home.title' => 'KoeMyaku',
+			'home.emptyTitle' => 'No KoeMyaku yet',
+			'home.emptyMessage' => 'Add pins on the map\nand leave voice memos',
+			'home.errorLoading' => 'Failed to load',
+			'home.retry' => 'Retry',
+			'home.play' => 'Play',
+			'home.share' => 'Share',
+			'home.shareSubject' => 'Share KoeMyaku',
+			'home.delete' => 'Delete',
+			'home.deleteConfirmTitle' => 'Confirm Delete',
+			'home.deleteConfirmMessage' => 'Are you sure you want to delete this KoeMyaku?',
+			'home.deleteSuccess' => 'Deleted successfully',
+			'home.deleteError' => 'Failed to delete',
+			'home.editKoemyaku' => 'Edit KoeMyaku',
+			'home.updateSuccess' => 'Updated successfully',
+			'home.updateError' => 'Failed to update',
 			'map.markerBottomSheet.addPinConfirmation' => 'Add a pin to this location?',
 			'map.markerBottomSheet.editPinConfirmation' => 'Edit this pin?',
 			'map.markerBottomSheet.latitude' => 'Latitude',

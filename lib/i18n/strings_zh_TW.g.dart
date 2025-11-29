@@ -38,6 +38,7 @@ class TranslationsZhTw with BaseTranslations<AppLocale, Translations> implements
 
 	// Translations
 	@override late final _TranslationsCommonZhTw common = _TranslationsCommonZhTw._(_root);
+	@override late final _TranslationsHomeZhTw home = _TranslationsHomeZhTw._(_root);
 	@override late final _TranslationsMapZhTw map = _TranslationsMapZhTw._(_root);
 	@override late final _TranslationsWelcomeZhTw welcome = _TranslationsWelcomeZhTw._(_root);
 }
@@ -52,6 +53,31 @@ class _TranslationsCommonZhTw implements TranslationsCommonEn {
 	@override String get cancel => '取消';
 	@override String get save => '儲存';
 	@override String get saving => '儲存中...';
+}
+
+// Path: home
+class _TranslationsHomeZhTw implements TranslationsHomeEn {
+	_TranslationsHomeZhTw._(this._root);
+
+	final TranslationsZhTw _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '聲脈';
+	@override String get emptyTitle => '還沒有聲脈';
+	@override String get emptyMessage => '在地圖上新增圖釘\n並留下語音備忘';
+	@override String get errorLoading => '載入失敗';
+	@override String get retry => '重試';
+	@override String get play => '播放';
+	@override String get share => '分享';
+	@override String get shareSubject => '分享聲脈';
+	@override String get delete => '刪除';
+	@override String get deleteConfirmTitle => '確認刪除';
+	@override String get deleteConfirmMessage => '確定要刪除這個聲脈嗎？';
+	@override String get deleteSuccess => '刪除成功';
+	@override String get deleteError => '刪除失敗';
+	@override String get editKoemyaku => '編輯聲脈';
+	@override String get updateSuccess => '更新成功';
+	@override String get updateError => '更新失敗';
 }
 
 // Path: map
@@ -114,6 +140,22 @@ extension on TranslationsZhTw {
 			'common.cancel' => '取消',
 			'common.save' => '儲存',
 			'common.saving' => '儲存中...',
+			'home.title' => '聲脈',
+			'home.emptyTitle' => '還沒有聲脈',
+			'home.emptyMessage' => '在地圖上新增圖釘\n並留下語音備忘',
+			'home.errorLoading' => '載入失敗',
+			'home.retry' => '重試',
+			'home.play' => '播放',
+			'home.share' => '分享',
+			'home.shareSubject' => '分享聲脈',
+			'home.delete' => '刪除',
+			'home.deleteConfirmTitle' => '確認刪除',
+			'home.deleteConfirmMessage' => '確定要刪除這個聲脈嗎？',
+			'home.deleteSuccess' => '刪除成功',
+			'home.deleteError' => '刪除失敗',
+			'home.editKoemyaku' => '編輯聲脈',
+			'home.updateSuccess' => '更新成功',
+			'home.updateError' => '更新失敗',
 			'map.markerBottomSheet.addPinConfirmation' => '要在此位置新增圖釘嗎？',
 			'map.markerBottomSheet.editPinConfirmation' => '要編輯此圖釘嗎？',
 			'map.markerBottomSheet.latitude' => '緯度',

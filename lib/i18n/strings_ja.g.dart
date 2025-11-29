@@ -38,6 +38,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 
 	// Translations
 	@override late final _TranslationsCommonJa common = _TranslationsCommonJa._(_root);
+	@override late final _TranslationsHomeJa home = _TranslationsHomeJa._(_root);
 	@override late final _TranslationsMapJa map = _TranslationsMapJa._(_root);
 	@override late final _TranslationsWelcomeJa welcome = _TranslationsWelcomeJa._(_root);
 }
@@ -52,6 +53,31 @@ class _TranslationsCommonJa implements TranslationsCommonEn {
 	@override String get cancel => 'キャンセル';
 	@override String get save => '保存';
 	@override String get saving => '保存中...';
+}
+
+// Path: home
+class _TranslationsHomeJa implements TranslationsHomeEn {
+	_TranslationsHomeJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'こえみゃく';
+	@override String get emptyTitle => 'まだこえみゃくがありません';
+	@override String get emptyMessage => '地図上でピンを追加して\n音声メモを残しましょう';
+	@override String get errorLoading => '読み込みに失敗しました';
+	@override String get retry => '再試行';
+	@override String get play => '再生';
+	@override String get share => '共有';
+	@override String get shareSubject => 'こえみゃくを共有';
+	@override String get delete => '削除';
+	@override String get deleteConfirmTitle => '削除の確認';
+	@override String get deleteConfirmMessage => 'このこえみゃくを削除しますか？';
+	@override String get deleteSuccess => '削除しました';
+	@override String get deleteError => '削除に失敗しました';
+	@override String get editKoemyaku => 'こえみゃくを編集';
+	@override String get updateSuccess => '更新しました';
+	@override String get updateError => '更新に失敗しました';
 }
 
 // Path: map
@@ -114,6 +140,22 @@ extension on TranslationsJa {
 			'common.cancel' => 'キャンセル',
 			'common.save' => '保存',
 			'common.saving' => '保存中...',
+			'home.title' => 'こえみゃく',
+			'home.emptyTitle' => 'まだこえみゃくがありません',
+			'home.emptyMessage' => '地図上でピンを追加して\n音声メモを残しましょう',
+			'home.errorLoading' => '読み込みに失敗しました',
+			'home.retry' => '再試行',
+			'home.play' => '再生',
+			'home.share' => '共有',
+			'home.shareSubject' => 'こえみゃくを共有',
+			'home.delete' => '削除',
+			'home.deleteConfirmTitle' => '削除の確認',
+			'home.deleteConfirmMessage' => 'このこえみゃくを削除しますか？',
+			'home.deleteSuccess' => '削除しました',
+			'home.deleteError' => '削除に失敗しました',
+			'home.editKoemyaku' => 'こえみゃくを編集',
+			'home.updateSuccess' => '更新しました',
+			'home.updateError' => '更新に失敗しました',
 			'map.markerBottomSheet.addPinConfirmation' => 'この場所にピンを追加しますか？',
 			'map.markerBottomSheet.editPinConfirmation' => 'このピンを編集しますか？',
 			'map.markerBottomSheet.latitude' => '緯度',

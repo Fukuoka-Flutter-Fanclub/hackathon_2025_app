@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hackathon_2025_app/core/services/auth_service.dart';
+import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 
 import '../../features/auth/presentation/pages/welcome_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -20,7 +21,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // ログイン済みでWelcome画面に行こうとしている場合はMapEditへ
       if (isLoggedIn && isGoingToWelcome) {
-        return MapEditPage.routeName;
+        return HomePage.routeName;
       }
 
       // 未ログインでWelcome以外に行こうとしている場合はWelcomeへ
@@ -56,7 +57,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: MapEditPage.routeName,
         name: MapEditPage.name,
         pageBuilder: (context, state) {
-          return MaterialPage(key: state.pageKey, child: const MapEditPage());
+          final koemyaku = state.extra as KoemyakuData?;
+          return MaterialPage(
+            key: state.pageKey,
+            child: MapEditPage(editingKoemyaku: koemyaku),
+          );
         },
       ),
     ],

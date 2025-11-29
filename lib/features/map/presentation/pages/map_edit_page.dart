@@ -9,6 +9,7 @@ import 'package:hackathon_2025_app/core/services/auth_service.dart';
 import 'package:hackathon_2025_app/core/services/koemyaku_service.dart';
 import 'package:hackathon_2025_app/core/services/location_service.dart';
 import 'package:hackathon_2025_app/core/widgets/map_loading_widget.dart';
+import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 import 'package:hackathon_2025_app/features/map/data/models/marker/marker_data.dart';
 import 'package:hackathon_2025_app/features/map/presentation/widgets/current_location_marker.dart';
 import 'package:hackathon_2025_app/features/map/presentation/widgets/marker_bottom_sheet.dart';
@@ -18,7 +19,11 @@ import 'package:latlong2/latlong.dart';
 import 'package:uuid/uuid.dart';
 
 class MapEditPage extends ConsumerStatefulWidget {
-  const MapEditPage({super.key});
+  const MapEditPage({super.key, this.editingKoemyaku});
+
+  /// 編集対象のKoemyaku（新規作成の場合はnull）
+  final KoemyakuData? editingKoemyaku;
+
   static const String routeName = '/map_edit';
   static const String name = 'map_edit';
 
@@ -52,10 +57,28 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
   // 保存中フラグ
   bool _isSaving = false;
 
+  // 編集モード用
+  bool get _isEditMode => widget.editingKoemyaku != null;
+  String? _editingKoemyakuId;
+  String _editingTitle = '';
+  String _editingMessage = '';
+
   @override
   void initState() {
     super.initState();
     _initLocationService();
+    _initEditingData();
+  }
+
+  /// 編集モードの場合、既存データを読み込む
+  void _initEditingData() {
+    final koemyaku = widget.editingKoemyaku;
+    if (koemyaku != null) {
+      _editingKoemyakuId = koemyaku.id;
+      _editingTitle = koemyaku.title;
+      _editingMessage = koemyaku.message;
+      _savedMarkers.addAll(koemyaku.markers);
+    }
   }
 
   @override
@@ -277,8 +300,13 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
   Future<void> _saveKoemyaku() async {
     final t = Translations.of(context);
 
-    // ダイアログを表示
-    final result = await SaveKoemyakuDialog.show(context);
+    // ダイアログを表示（編集モードの場合は初期値を設定）
+    final result = await SaveKoemyakuDialog.show(
+      context,
+      initialTitle: _isEditMode ? _editingTitle : null,
+      initialMessage: _isEditMode ? _editingMessage : null,
+      isEditing: _isEditMode,
+    );
     if (result == null) return;
 
     setState(() {
@@ -294,29 +322,52 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
         throw Exception('User not logged in');
       }
 
-      await koemyakuService.saveKoemyaku(
-        userId: userId,
-        title: result.title,
-        message: result.message,
-        markers: _savedMarkers,
-      );
+      if (_isEditMode && _editingKoemyakuId != null) {
+        // 編集モード: 更新
+        await koemyakuService.updateKoemyaku(
+          id: _editingKoemyakuId!,
+          userId: userId,
+          title: result.title,
+          message: result.message,
+          markers: _savedMarkers,
+          createdAt: widget.editingKoemyaku!.createdAt,
+        );
 
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(t.map.saveSuccess)));
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(t.home.updateSuccess)));
 
-        // 保存後、マーカーをクリア
-        setState(() {
-          _savedMarkers.clear();
-        });
+          // 編集後、前の画面に戻る
+          Navigator.of(context).pop();
+        }
+      } else {
+        // 新規作成モード
+        await koemyakuService.saveKoemyaku(
+          userId: userId,
+          title: result.title,
+          message: result.message,
+          markers: _savedMarkers,
+        );
+
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(t.map.saveSuccess)));
+
+          // 保存後、マーカーをクリア
+          setState(() {
+            _savedMarkers.clear();
+          });
+        }
       }
     } catch (e) {
       debugPrint('Failed to save koemyaku: $e');
       if (mounted) {
+        final errorMessage = _isEditMode ? t.home.updateError : t.map.saveError;
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(t.map.saveError)));
+        ).showSnackBar(SnackBar(content: Text(errorMessage)));
       }
     } finally {
       if (mounted) {
