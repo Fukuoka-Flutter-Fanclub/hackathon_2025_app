@@ -41,6 +41,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 
 	// Translations
 	late final TranslationsMapEn map = TranslationsMapEn._(_root);
+	late final TranslationsWelcomeEn welcome = TranslationsWelcomeEn._(_root);
 }
 
 // Path: map
@@ -51,6 +52,27 @@ class TranslationsMapEn {
 
 	// Translations
 	late final TranslationsMapMarkerBottomSheetEn markerBottomSheet = TranslationsMapMarkerBottomSheetEn._(_root);
+}
+
+// Path: welcome
+class TranslationsWelcomeEn {
+	TranslationsWelcomeEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'KoeMyaku'
+	String get title => 'KoeMyaku';
+
+	/// en: 'Memories of places, preserved in voice'
+	String get subtitle => 'Memories of places, preserved in voice';
+
+	/// en: 'Leave voice memos on the map and create your own voice map'
+	String get description => 'Leave voice memos on the map\nand create your own voice map';
+
+	/// en: 'Get Started'
+	String get startButton => 'Get Started';
 }
 
 // Path: map.markerBottomSheet
@@ -106,6 +128,10 @@ extension on Translations {
 			'map.markerBottomSheet.close' => 'Close',
 			'map.markerBottomSheet.rangeLabel' => 'Range',
 			'map.markerBottomSheet.rangeUnit' => 'm',
+			'welcome.title' => 'KoeMyaku',
+			'welcome.subtitle' => 'Memories of places, preserved in voice',
+			'welcome.description' => 'Leave voice memos on the map\nand create your own voice map',
+			'welcome.startButton' => 'Get Started',
 			_ => null,
 		};
 	}

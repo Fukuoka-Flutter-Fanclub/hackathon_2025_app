@@ -38,6 +38,7 @@ class TranslationsZhTw with BaseTranslations<AppLocale, Translations> implements
 
 	// Translations
 	@override late final _TranslationsMapZhTw map = _TranslationsMapZhTw._(_root);
+	@override late final _TranslationsWelcomeZhTw welcome = _TranslationsWelcomeZhTw._(_root);
 }
 
 // Path: map
@@ -48,6 +49,19 @@ class _TranslationsMapZhTw implements TranslationsMapEn {
 
 	// Translations
 	@override late final _TranslationsMapMarkerBottomSheetZhTw markerBottomSheet = _TranslationsMapMarkerBottomSheetZhTw._(_root);
+}
+
+// Path: welcome
+class _TranslationsWelcomeZhTw implements TranslationsWelcomeEn {
+	_TranslationsWelcomeZhTw._(this._root);
+
+	final TranslationsZhTw _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'KoeMyaku';
+	@override String get subtitle => '用聲音保存地點的記憶';
+	@override String get description => '在地圖上留下語音備忘，\n創建屬於您的聲音地圖';
+	@override String get startButton => '開始使用';
 }
 
 // Path: map.markerBottomSheet
@@ -85,6 +99,10 @@ extension on TranslationsZhTw {
 			'map.markerBottomSheet.close' => '關閉',
 			'map.markerBottomSheet.rangeLabel' => '範圍',
 			'map.markerBottomSheet.rangeUnit' => 'm',
+			'welcome.title' => 'KoeMyaku',
+			'welcome.subtitle' => '用聲音保存地點的記憶',
+			'welcome.description' => '在地圖上留下語音備忘，\n創建屬於您的聲音地圖',
+			'welcome.startButton' => '開始使用',
 			_ => null,
 		};
 	}

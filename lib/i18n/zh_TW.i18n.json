@@ -11,5 +11,11 @@
       "rangeLabel": "範圍",
       "rangeUnit": "m"
     }
+  },
+  "welcome": {
+    "title": "KoeMyaku",
+    "subtitle": "用聲音保存地點的記憶",
+    "description": "在地圖上留下語音備忘，\n創建屬於您的聲音地圖",
+    "startButton": "開始使用"
   }
 }

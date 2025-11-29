@@ -11,5 +11,11 @@
       "rangeLabel": "範囲",
       "rangeUnit": "m"
     }
+  },
+  "welcome": {
+    "title": "KoeMyaku",
+    "subtitle": "声で残す、場所の記憶",
+    "description": "地図上に音声メモを残して、\nあなただけの声の地図を作りましょう",
+    "startButton": "はじめる"
   }
 }

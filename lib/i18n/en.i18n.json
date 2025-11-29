@@ -11,5 +11,11 @@
       "rangeLabel": "Range",
       "rangeUnit": "m"
     }
+  },
+  "welcome": {
+    "title": "KoeMyaku",
+    "subtitle": "Memories of places, preserved in voice",
+    "description": "Leave voice memos on the map\nand create your own voice map",
+    "startButton": "Get Started"
   }
 }

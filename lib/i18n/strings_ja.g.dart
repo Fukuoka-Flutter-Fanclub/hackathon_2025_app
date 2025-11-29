@@ -38,6 +38,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 
 	// Translations
 	@override late final _TranslationsMapJa map = _TranslationsMapJa._(_root);
+	@override late final _TranslationsWelcomeJa welcome = _TranslationsWelcomeJa._(_root);
 }
 
 // Path: map
@@ -48,6 +49,19 @@ class _TranslationsMapJa implements TranslationsMapEn {
 
 	// Translations
 	@override late final _TranslationsMapMarkerBottomSheetJa markerBottomSheet = _TranslationsMapMarkerBottomSheetJa._(_root);
+}
+
+// Path: welcome
+class _TranslationsWelcomeJa implements TranslationsWelcomeEn {
+	_TranslationsWelcomeJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'KoeMyaku';
+	@override String get subtitle => '声で残す、場所の記憶';
+	@override String get description => '地図上に音声メモを残して、\nあなただけの声の地図を作りましょう';
+	@override String get startButton => 'はじめる';
 }
 
 // Path: map.markerBottomSheet
@@ -85,6 +99,10 @@ extension on TranslationsJa {
 			'map.markerBottomSheet.close' => '閉じる',
 			'map.markerBottomSheet.rangeLabel' => '範囲',
 			'map.markerBottomSheet.rangeUnit' => 'm',
+			'welcome.title' => 'KoeMyaku',
+			'welcome.subtitle' => '声で残す、場所の記憶',
+			'welcome.description' => '地図上に音声メモを残して、\nあなただけの声の地図を作りましょう',
+			'welcome.startButton' => 'はじめる',
 			_ => null,
 		};
 	}
