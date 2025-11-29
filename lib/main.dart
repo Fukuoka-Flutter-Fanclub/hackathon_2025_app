@@ -38,6 +38,9 @@ void main() {
       final analytics = FirebaseAnalytics.instance;
       await analytics.setAnalyticsCollectionEnabled(true);
 
+      // デバイスのロケールを使用して言語を設定
+      await LocaleSettings.useDeviceLocale();
+
       // アプリの起動
       runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
     },
