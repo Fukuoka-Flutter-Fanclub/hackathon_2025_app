@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hackathon_2025_app/core/services/location_service.dart';
 import 'package:hackathon_2025_app/core/widgets/map_loading_widget.dart';
 import 'package:hackathon_2025_app/features/map/presentation/widgets/current_location_marker.dart';
+import 'package:hackathon_2025_app/features/map/presentation/widgets/marker_bottom_sheet.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapEditPage extends ConsumerStatefulWidget {
@@ -18,18 +19,27 @@ class MapEditPage extends ConsumerStatefulWidget {
   ConsumerState<MapEditPage> createState() => _MapEditPageState();
 }
 
-class _MapEditPageState extends ConsumerState<MapEditPage> {
+class _MapEditPageState extends ConsumerState<MapEditPage>
+    with TickerProviderStateMixin {
   static const _initialZoom = 15.0;
+  static const _focusZoom = 17.0;
+  static const _animationDuration = Duration(milliseconds: 500);
 
   final MapController _mapController = MapController();
   StreamSubscription<Position>? _positionStreamSubscription;
   StreamSubscription<double>? _compassStreamSubscription;
+  AnimationController? _animationController;
 
   LatLng? _currentPosition;
   double _heading = 0.0;
   bool _isLocationEnabled = false;
   bool _isCompassAvailable = false;
   bool _isLoading = true;
+
+  // タップで追加されるピンのリスト
+  final List<LatLng> _savedMarkers = [];
+  // 現在選択中のピン（ボトムシート表示中）
+  LatLng? _selectedMarker;
 
   @override
   void initState() {
@@ -41,8 +51,50 @@ class _MapEditPageState extends ConsumerState<MapEditPage> {
   void dispose() {
     _positionStreamSubscription?.cancel();
     _compassStreamSubscription?.cancel();
+    _animationController?.dispose();
     _mapController.dispose();
     super.dispose();
+  }
+
+  /// アニメーション付きでマップを移動
+  void _animatedMove(LatLng destLocation, double destZoom) {
+    // 前のアニメーションをキャンセル
+    _animationController?.dispose();
+
+    _animationController = AnimationController(
+      duration: _animationDuration,
+      vsync: this,
+    );
+
+    final startLocation = _mapController.camera.center;
+    final startZoom = _mapController.camera.zoom;
+
+    final latTween = Tween<double>(
+      begin: startLocation.latitude,
+      end: destLocation.latitude,
+    );
+    final lngTween = Tween<double>(
+      begin: startLocation.longitude,
+      end: destLocation.longitude,
+    );
+    final zoomTween = Tween<double>(
+      begin: startZoom,
+      end: destZoom,
+    );
+
+    final animation = CurvedAnimation(
+      parent: _animationController!,
+      curve: Curves.easeInOut,
+    );
+
+    _animationController!.addListener(() {
+      _mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+      );
+    });
+
+    _animationController!.forward();
   }
 
   Future<void> _initLocationService() async {
@@ -101,6 +153,70 @@ class _MapEditPageState extends ConsumerState<MapEditPage> {
     }
   }
 
+  void _onMapTapped(LatLng latLng) {
+    setState(() {
+      _selectedMarker = latLng;
+    });
+
+    // ピンが画面の少し上に来るように緯度をオフセット
+    final offsetLat = latLng.latitude - 0.001;
+    final offsetCenter = LatLng(offsetLat, latLng.longitude);
+
+    // アニメーション付きでズームして移動
+    _animatedMove(offsetCenter, _focusZoom);
+
+    // ボトムシートを表示
+    _showMarkerBottomSheet(latLng);
+  }
+
+  void _showMarkerBottomSheet(LatLng latLng, {bool isEditing = false}) {
+    MarkerBottomSheet.show(
+      context: context,
+      latLng: latLng,
+      isEditing: isEditing,
+      onSave: () {
+        setState(() {
+          if (!isEditing) {
+            _savedMarkers.add(latLng);
+          }
+          _selectedMarker = null;
+        });
+      },
+      onDelete: () {
+        setState(() {
+          if (isEditing) {
+            _savedMarkers.remove(latLng);
+          }
+          _selectedMarker = null;
+        });
+      },
+      onDismiss: () {
+        // ボトムシートが閉じられたら選択中のマーカーをクリア
+        if (_selectedMarker != null) {
+          setState(() {
+            _selectedMarker = null;
+          });
+        }
+      },
+    );
+  }
+
+  void _onSavedMarkerTapped(LatLng latLng) {
+    setState(() {
+      _selectedMarker = latLng;
+    });
+
+    // ピンが画面の少し上に来るように緯度をオフセット
+    final offsetLat = latLng.latitude - 0.001;
+    final offsetCenter = LatLng(offsetLat, latLng.longitude);
+
+    // アニメーション付きでズームして移動
+    _animatedMove(offsetCenter, _focusZoom);
+
+    // 編集モードでボトムシートを表示
+    _showMarkerBottomSheet(latLng, isEditing: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     // ローディング中はインジケータを表示
@@ -119,6 +235,9 @@ class _MapEditPageState extends ConsumerState<MapEditPage> {
           options: MapOptions(
             initialCenter: center,
             initialZoom: _initialZoom,
+            onTap: (tapPosition, latLng) {
+              _onMapTapped(latLng);
+            },
           ),
           children: [
             TileLayer(
@@ -136,6 +255,43 @@ class _MapEditPageState extends ConsumerState<MapEditPage> {
                   ),
                 ],
               ),
+            // 保存されたピン（選択中のピンは除外）
+            MarkerLayer(
+              markers: _savedMarkers
+                  .where((latLng) => latLng != _selectedMarker)
+                  .map(
+                    (latLng) => Marker(
+                      point: latLng,
+                      width: 40,
+                      height: 40,
+                      child: GestureDetector(
+                        onTap: () => _onSavedMarkerTapped(latLng),
+                        child: const Icon(
+                          Icons.location_pin,
+                          color: Colors.red,
+                          size: 40,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+            // 選択中のピン
+            if (_selectedMarker != null)
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: _selectedMarker!,
+                    width: 50,
+                    height: 50,
+                    child: const Icon(
+                      Icons.location_pin,
+                      color: Colors.blue,
+                      size: 50,
+                    ),
+                  ),
+                ],
+              ),
             RichAttributionWidget(
               attributions: [
                 TextSourceAttribution(
@@ -150,7 +306,7 @@ class _MapEditPageState extends ConsumerState<MapEditPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_currentPosition != null) {
-            _mapController.move(_currentPosition!, _initialZoom);
+            _animatedMove(_currentPosition!, _initialZoom);
           }
         },
         child: const Icon(Icons.my_location),
