@@ -10,8 +10,9 @@ abstract class MarkerData with _$MarkerData {
     required String id,
     required double latitude,
     required double longitude,
-    @Default(5.0) double radius,
+    @Default(10.0) double radius,
     String? voicePath,
+    @Default([]) List<double> amplitudes,
     DateTime? createdAt,
   }) = _MarkerData;
 
@@ -27,8 +28,9 @@ abstract class MarkerData with _$MarkerData {
   factory MarkerData.fromLatLng({
     required String id,
     required LatLng latLng,
-    double radius = 5.0,
+    double radius = 10.0,
     String? voicePath,
+    List<double> amplitudes = const [],
   }) {
     return MarkerData(
       id: id,
@@ -36,6 +38,7 @@ abstract class MarkerData with _$MarkerData {
       longitude: latLng.longitude,
       radius: radius,
       voicePath: voicePath,
+      amplitudes: amplitudes,
       createdAt: DateTime.now(),
     );
   }

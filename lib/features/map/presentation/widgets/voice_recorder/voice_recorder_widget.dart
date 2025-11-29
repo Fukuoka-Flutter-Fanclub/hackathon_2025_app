@@ -25,10 +25,12 @@ class VoiceRecorderWidget extends StatefulWidget {
     this.onDelete,
     this.primaryColor,
     this.backgroundColor,
+    this.initialPath,
+    this.initialAmplitudes,
   });
 
-  /// 録音完了時のコールバック（ファイルパスを返す）
-  final ValueChanged<String>? onRecordingComplete;
+  /// 録音完了時のコールバック（ファイルパスと振幅データを返す）
+  final void Function(String path, List<double> amplitudes)? onRecordingComplete;
 
   /// 録音削除時のコールバック
   final VoidCallback? onDelete;
@@ -38,6 +40,12 @@ class VoiceRecorderWidget extends StatefulWidget {
 
   /// 背景色（デフォルト: gray100）
   final Color? backgroundColor;
+
+  /// 既存の録音ファイルパス（編集時に使用）
+  final String? initialPath;
+
+  /// 既存の振幅データ（編集時に使用）
+  final List<double>? initialAmplitudes;
 
   @override
   State<VoiceRecorderWidget> createState() => _VoiceRecorderWidgetState();
@@ -89,6 +97,22 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget>
     );
 
     _setupListeners();
+
+    // 既存の録音ファイルがある場合は読み込む
+    if (widget.initialPath != null) {
+      _loadInitialAudio();
+    }
+  }
+
+  Future<void> _loadInitialAudio() async {
+    _recordedPath = widget.initialPath;
+    if (widget.initialAmplitudes != null) {
+      _amplitudes.addAll(widget.initialAmplitudes!);
+    }
+    await _playbackService.loadAudio(widget.initialPath!);
+    if (mounted) {
+      setState(() => _state = VoiceRecorderState.recorded);
+    }
   }
 
   void _setupListeners() {
@@ -172,7 +196,7 @@ class _VoiceRecorderWidgetState extends State<VoiceRecorderWidget>
       _recordedPath = path;
       await _playbackService.loadAudio(path);
       setState(() => _state = VoiceRecorderState.recorded);
-      widget.onRecordingComplete?.call(path);
+      widget.onRecordingComplete?.call(path, List.from(_amplitudes));
     } else {
       setState(() => _state = VoiceRecorderState.idle);
     }

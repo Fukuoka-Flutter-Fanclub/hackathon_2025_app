@@ -8,8 +8,8 @@ class RadiusSlider extends StatelessWidget {
     super.key,
     required this.radius,
     required this.onChanged,
-    this.min = 5.0,
-    this.max = 50.0,
+    this.min = 10.0,
+    this.max = 100.0,
     this.divisions = 9,
   });
 

@@ -16,27 +16,33 @@ class MarkerBottomSheet extends StatefulWidget {
     required this.onRadiusChanged,
     this.isEditing = false,
     this.onVoiceRecorded,
-    this.initialRadius = 5.0,
+    this.initialRadius = 10.0,
+    this.initialVoicePath,
+    this.initialAmplitudes,
   });
 
   final LatLng latLng;
-  final void Function(String? voicePath, double radius) onSave;
+  final void Function(String? voicePath, double radius, List<double> amplitudes) onSave;
   final VoidCallback onDelete;
   final void Function(double radius) onRadiusChanged;
   final bool isEditing;
-  final ValueChanged<String>? onVoiceRecorded;
+  final void Function(String path, List<double> amplitudes)? onVoiceRecorded;
   final double initialRadius;
+  final String? initialVoicePath;
+  final List<double>? initialAmplitudes;
 
   static Future<void> show({
     required BuildContext context,
     required LatLng latLng,
-    required void Function(String? voicePath, double radius) onSave,
+    required void Function(String? voicePath, double radius, List<double> amplitudes) onSave,
     required VoidCallback onDelete,
     required void Function(double radius) onRadiusChanged,
     VoidCallback? onDismiss,
     bool isEditing = false,
-    ValueChanged<String>? onVoiceRecorded,
+    void Function(String path, List<double> amplitudes)? onVoiceRecorded,
     double initialRadius = 5.0,
+    String? initialVoicePath,
+    List<double>? initialAmplitudes,
   }) {
     return showModalBottomSheet<void>(
       context: context,
@@ -50,10 +56,12 @@ class MarkerBottomSheet extends StatefulWidget {
           isEditing: isEditing,
           onVoiceRecorded: onVoiceRecorded,
           initialRadius: initialRadius,
+          initialVoicePath: initialVoicePath,
+          initialAmplitudes: initialAmplitudes,
           onRadiusChanged: onRadiusChanged,
-          onSave: (voicePath, radius) {
+          onSave: (voicePath, radius, amplitudes) {
             Navigator.pop(context);
-            onSave(voicePath, radius);
+            onSave(voicePath, radius, amplitudes);
           },
           onDelete: () {
             Navigator.pop(context);
@@ -72,24 +80,29 @@ class MarkerBottomSheet extends StatefulWidget {
 
 class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
   String? _recordedVoicePath;
+  List<double> _recordedAmplitudes = [];
   late double _radius;
 
   @override
   void initState() {
     super.initState();
     _radius = widget.initialRadius;
+    _recordedVoicePath = widget.initialVoicePath;
+    _recordedAmplitudes = widget.initialAmplitudes ?? [];
   }
 
-  void _onVoiceRecorded(String path) {
+  void _onVoiceRecorded(String path, List<double> amplitudes) {
     setState(() {
       _recordedVoicePath = path;
+      _recordedAmplitudes = amplitudes;
     });
-    widget.onVoiceRecorded?.call(path);
+    widget.onVoiceRecorded?.call(path, amplitudes);
   }
 
   void _onVoiceDeleted() {
     setState(() {
       _recordedVoicePath = null;
+      _recordedAmplitudes = [];
     });
   }
 
@@ -143,14 +156,13 @@ class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
           VoiceRecorderWidget(
             onRecordingComplete: _onVoiceRecorded,
             onDelete: _onVoiceDeleted,
+            initialPath: widget.initialVoicePath,
+            initialAmplitudes: widget.initialAmplitudes,
           ),
           // 録音データがある場合のみ半径スライダーを表示
           if (_recordedVoicePath != null) ...[
             SizedBox(height: 16.h),
-            RadiusSlider(
-              radius: _radius,
-              onChanged: _onRadiusChanged,
-            ),
+            RadiusSlider(radius: _radius, onChanged: _onRadiusChanged),
           ],
           SizedBox(height: 20.h),
           // アクションボタン
@@ -165,12 +177,8 @@ class _MarkerBottomSheetState extends State<MarkerBottomSheet> {
               SizedBox(width: 16.w),
               Expanded(
                 child: FilledButton(
-                  onPressed: () => widget.onSave(_recordedVoicePath, _radius),
-                  child: Text(
-                    widget.isEditing
-                        ? context.t.map.markerBottomSheet.close
-                        : context.t.map.markerBottomSheet.save,
-                  ),
+                  onPressed: () => widget.onSave(_recordedVoicePath, _radius, _recordedAmplitudes),
+                  child: Text(context.t.map.markerBottomSheet.save),
                 ),
               ),
             ],

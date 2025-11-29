@@ -181,17 +181,20 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
       latLng: marker.latLng,
       isEditing: isEditing,
       initialRadius: marker.radius,
+      initialVoicePath: marker.voicePath,
+      initialAmplitudes: marker.amplitudes,
       onRadiusChanged: (radius) {
         setState(() {
           _tempRadius = radius;
         });
       },
-      onSave: (voicePath, radius) {
+      onSave: (voicePath, radius, amplitudes) {
         setState(() {
           if (!isEditing) {
             _savedMarkers.add(marker.copyWith(
               voicePath: voicePath,
               radius: radius,
+              amplitudes: amplitudes,
             ));
           } else {
             // 編集モードの場合は既存のマーカーを更新
@@ -200,6 +203,7 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
               _savedMarkers[index] = marker.copyWith(
                 voicePath: voicePath,
                 radius: radius,
+                amplitudes: amplitudes,
               );
             }
           }

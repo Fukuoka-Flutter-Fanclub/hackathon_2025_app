@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MarkerData {
 
- String get id; double get latitude; double get longitude; double get radius; String? get voicePath; DateTime? get createdAt;
+ String get id; double get latitude; double get longitude; double get radius; String? get voicePath; List<double> get amplitudes; DateTime? get createdAt;
 /// Create a copy of MarkerData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $MarkerDataCopyWith<MarkerData> get copyWith => _$MarkerDataCopyWithImpl<MarkerD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarkerData&&(identical(other.id, id) || other.id == id)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.radius, radius) || other.radius == radius)&&(identical(other.voicePath, voicePath) || other.voicePath == voicePath)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MarkerData&&(identical(other.id, id) || other.id == id)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.radius, radius) || other.radius == radius)&&(identical(other.voicePath, voicePath) || other.voicePath == voicePath)&&const DeepCollectionEquality().equals(other.amplitudes, amplitudes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,latitude,longitude,radius,voicePath,createdAt);
+int get hashCode => Object.hash(runtimeType,id,latitude,longitude,radius,voicePath,const DeepCollectionEquality().hash(amplitudes),createdAt);
 
 @override
 String toString() {
-  return 'MarkerData(id: $id, latitude: $latitude, longitude: $longitude, radius: $radius, voicePath: $voicePath, createdAt: $createdAt)';
+  return 'MarkerData(id: $id, latitude: $latitude, longitude: $longitude, radius: $radius, voicePath: $voicePath, amplitudes: $amplitudes, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $MarkerDataCopyWith<$Res>  {
   factory $MarkerDataCopyWith(MarkerData value, $Res Function(MarkerData) _then) = _$MarkerDataCopyWithImpl;
 @useResult
 $Res call({
- String id, double latitude, double longitude, double radius, String? voicePath, DateTime? createdAt
+ String id, double latitude, double longitude, double radius, String? voicePath, List<double> amplitudes, DateTime? createdAt
 });
 
 
@@ -65,14 +65,15 @@ class _$MarkerDataCopyWithImpl<$Res>
 
 /// Create a copy of MarkerData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? latitude = null,Object? longitude = null,Object? radius = null,Object? voicePath = freezed,Object? createdAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? latitude = null,Object? longitude = null,Object? radius = null,Object? voicePath = freezed,Object? amplitudes = null,Object? createdAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double,radius: null == radius ? _self.radius : radius // ignore: cast_nullable_to_non_nullable
 as double,voicePath: freezed == voicePath ? _self.voicePath : voicePath // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,amplitudes: null == amplitudes ? _self.amplitudes : amplitudes // ignore: cast_nullable_to_non_nullable
+as List<double>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  double latitude,  double longitude,  double radius,  String? voicePath,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  double latitude,  double longitude,  double radius,  String? voicePath,  List<double> amplitudes,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MarkerData() when $default != null:
-return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voicePath,_that.createdAt);case _:
+return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voicePath,_that.amplitudes,_that.createdAt);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voice
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  double latitude,  double longitude,  double radius,  String? voicePath,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  double latitude,  double longitude,  double radius,  String? voicePath,  List<double> amplitudes,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _MarkerData():
-return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voicePath,_that.createdAt);case _:
+return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voicePath,_that.amplitudes,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voice
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  double latitude,  double longitude,  double radius,  String? voicePath,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  double latitude,  double longitude,  double radius,  String? voicePath,  List<double> amplitudes,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _MarkerData() when $default != null:
-return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voicePath,_that.createdAt);case _:
+return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voicePath,_that.amplitudes,_that.createdAt);case _:
   return null;
 
 }
@@ -214,7 +215,7 @@ return $default(_that.id,_that.latitude,_that.longitude,_that.radius,_that.voice
 @JsonSerializable()
 
 class _MarkerData extends MarkerData {
-  const _MarkerData({required this.id, required this.latitude, required this.longitude, this.radius = 5.0, this.voicePath, this.createdAt}): super._();
+  const _MarkerData({required this.id, required this.latitude, required this.longitude, this.radius = 10.0, this.voicePath, final  List<double> amplitudes = const [], this.createdAt}): _amplitudes = amplitudes,super._();
   factory _MarkerData.fromJson(Map<String, dynamic> json) => _$MarkerDataFromJson(json);
 
 @override final  String id;
@@ -222,6 +223,13 @@ class _MarkerData extends MarkerData {
 @override final  double longitude;
 @override@JsonKey() final  double radius;
 @override final  String? voicePath;
+ final  List<double> _amplitudes;
+@override@JsonKey() List<double> get amplitudes {
+  if (_amplitudes is EqualUnmodifiableListView) return _amplitudes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_amplitudes);
+}
+
 @override final  DateTime? createdAt;
 
 /// Create a copy of MarkerData
@@ -237,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkerData&&(identical(other.id, id) || other.id == id)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.radius, radius) || other.radius == radius)&&(identical(other.voicePath, voicePath) || other.voicePath == voicePath)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkerData&&(identical(other.id, id) || other.id == id)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.radius, radius) || other.radius == radius)&&(identical(other.voicePath, voicePath) || other.voicePath == voicePath)&&const DeepCollectionEquality().equals(other._amplitudes, _amplitudes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,latitude,longitude,radius,voicePath,createdAt);
+int get hashCode => Object.hash(runtimeType,id,latitude,longitude,radius,voicePath,const DeepCollectionEquality().hash(_amplitudes),createdAt);
 
 @override
 String toString() {
-  return 'MarkerData(id: $id, latitude: $latitude, longitude: $longitude, radius: $radius, voicePath: $voicePath, createdAt: $createdAt)';
+  return 'MarkerData(id: $id, latitude: $latitude, longitude: $longitude, radius: $radius, voicePath: $voicePath, amplitudes: $amplitudes, createdAt: $createdAt)';
 }
 
 
@@ -257,7 +265,7 @@ abstract mixin class _$MarkerDataCopyWith<$Res> implements $MarkerDataCopyWith<$
   factory _$MarkerDataCopyWith(_MarkerData value, $Res Function(_MarkerData) _then) = __$MarkerDataCopyWithImpl;
 @override @useResult
 $Res call({
- String id, double latitude, double longitude, double radius, String? voicePath, DateTime? createdAt
+ String id, double latitude, double longitude, double radius, String? voicePath, List<double> amplitudes, DateTime? createdAt
 });
 
 
@@ -274,14 +282,15 @@ class __$MarkerDataCopyWithImpl<$Res>
 
 /// Create a copy of MarkerData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? latitude = null,Object? longitude = null,Object? radius = null,Object? voicePath = freezed,Object? createdAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? latitude = null,Object? longitude = null,Object? radius = null,Object? voicePath = freezed,Object? amplitudes = null,Object? createdAt = freezed,}) {
   return _then(_MarkerData(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,latitude: null == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
 as double,longitude: null == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double,radius: null == radius ? _self.radius : radius // ignore: cast_nullable_to_non_nullable
 as double,voicePath: freezed == voicePath ? _self.voicePath : voicePath // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,amplitudes: null == amplitudes ? _self._amplitudes : amplitudes // ignore: cast_nullable_to_non_nullable
+as List<double>,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
