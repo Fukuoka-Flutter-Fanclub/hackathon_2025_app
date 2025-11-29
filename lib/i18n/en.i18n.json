@@ -1,0 +1,11 @@
+{
+  "map": {
+    "markerBottomSheet": {
+      "addPinConfirmation": "Add a pin to this location?",
+      "latitude": "Latitude",
+      "longitude": "Longitude",
+      "delete": "Delete",
+      "save": "Save"
+    }
+  }
+}

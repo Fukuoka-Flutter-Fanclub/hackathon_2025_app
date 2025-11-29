@@ -1,0 +1,11 @@
+{
+  "map": {
+    "markerBottomSheet": {
+      "addPinConfirmation": "要在此位置新增圖釘嗎？",
+      "latitude": "緯度",
+      "longitude": "經度",
+      "delete": "刪除",
+      "save": "儲存"
+    }
+  }
+}
