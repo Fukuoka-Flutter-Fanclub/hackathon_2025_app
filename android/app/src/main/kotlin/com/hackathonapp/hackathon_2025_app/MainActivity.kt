@@ -1,4 +1,4 @@
-package com.hackathonapp.hackathon_2025_app
+package com.hackathonapp.hackathon2025app
 
 import io.flutter.embedding.android.FlutterActivity
 
