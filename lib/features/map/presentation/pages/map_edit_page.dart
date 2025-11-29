@@ -77,10 +77,7 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
       begin: startLocation.longitude,
       end: destLocation.longitude,
     );
-    final zoomTween = Tween<double>(
-      begin: startZoom,
-      end: destZoom,
-    );
+    final zoomTween = Tween<double>(begin: startZoom, end: destZoom);
 
     final animation = CurvedAnimation(
       parent: _animationController!,
@@ -128,28 +125,28 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
     }
 
     // 位置情報のストリームを開始
-    _positionStreamSubscription = locationService.getPositionStream().listen(
-      (Position position) {
-        setState(() {
-          _currentPosition = LatLng(position.latitude, position.longitude);
-          // コンパスが利用不可の場合はGPSのheadingを使用
-          if (!_isCompassAvailable) {
-            _heading = position.heading;
-          }
-        });
-      },
-    );
+    _positionStreamSubscription = locationService.getPositionStream().listen((
+      Position position,
+    ) {
+      setState(() {
+        _currentPosition = LatLng(position.latitude, position.longitude);
+        // コンパスが利用不可の場合はGPSのheadingを使用
+        if (!_isCompassAvailable) {
+          _heading = position.heading;
+        }
+      });
+    });
 
     // コンパスのストリームを開始（利用可能な場合のみ）
     _isCompassAvailable = await locationService.isCompassAvailable();
     if (_isCompassAvailable) {
-      _compassStreamSubscription = locationService.getCompassStream().listen(
-        (double heading) {
-          setState(() {
-            _heading = heading;
-          });
-        },
-      );
+      _compassStreamSubscription = locationService.getCompassStream().listen((
+        double heading,
+      ) {
+        setState(() {
+          _heading = heading;
+        });
+      });
     }
   }
 
@@ -174,13 +171,17 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
       context: context,
       latLng: latLng,
       isEditing: isEditing,
-      onSave: () {
+      onSave: (voicePath) {
         setState(() {
           if (!isEditing) {
             _savedMarkers.add(latLng);
           }
           _selectedMarker = null;
         });
+        // TODO: voicePath を保存する処理を追加
+        if (voicePath != null) {
+          debugPrint('Voice recorded at: $voicePath');
+        }
       },
       onDelete: () {
         setState(() {
@@ -228,7 +229,6 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
     final center = _currentPosition ?? const LatLng(35.6812, 139.7671);
 
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
         child: FlutterMap(
           mapController: _mapController,
@@ -241,7 +241,8 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              urlTemplate:
+                  'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
               userAgentPackageName: 'com.example.hackathon_2025_app',
             ),
             if (_currentPosition != null && _isLocationEnabled)
@@ -303,14 +304,19 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (_currentPosition != null) {
-            _animatedMove(_currentPosition!, _initialZoom);
-          }
-        },
-        child: const Icon(Icons.my_location),
+      
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(right: 16, bottom: 50),
+        child: FloatingActionButton(
+          onPressed: () {
+            if (_currentPosition != null) {
+              _animatedMove(_currentPosition!, _initialZoom);
+            }
+          },
+          child: const Icon(Icons.my_location),
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
