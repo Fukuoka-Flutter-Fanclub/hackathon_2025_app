@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hackathon_2025_app/features/home/data/repositories/koemyaku_repository.dart';
 import 'package:hackathon_2025_app/features/home/domain/providers/koemyaku_list_provider.dart';
+import 'package:hackathon_2025_app/features/home/presentation/widgets/empty_state_widget.dart';
+import 'package:hackathon_2025_app/features/home/presentation/widgets/error_state_widget.dart';
 import 'package:hackathon_2025_app/features/home/presentation/widgets/koemyaku_list_item.dart';
 import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 import 'package:hackathon_2025_app/features/map/presentation/pages/map_edit_page.dart';
@@ -23,7 +25,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final t = Translations.of(context);
 
     final koemyakuListAsync = ref.watch(koemyakuListStreamProvider);
@@ -44,7 +45,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         skipLoadingOnRefresh: true,
         data: (koemyakuList) {
           if (koemyakuList.isEmpty) {
-            return _buildEmptyState(context, t, colorScheme);
+            return const EmptyStateWidget();
           }
 
           return ListView.builder(
@@ -63,83 +64,13 @@ class _HomePageState extends ConsumerState<HomePage> {
             },
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) {
-          // デバッグ用にエラーをログ出力
           debugPrint('Koemyaku list error: $error');
-          return _buildErrorState(context, t, error);
+          return ErrorStateWidget(
+            onRetry: () => ref.invalidate(koemyakuListStreamProvider),
+          );
         },
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(
-    BuildContext context,
-    Translations t,
-    ColorScheme colorScheme,
-  ) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(32.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.map_outlined,
-              size: 80.sp,
-              color: colorScheme.primary.withValues(alpha: 0.5),
-            ),
-            SizedBox(height: 24.h),
-            Text(
-              t.home.emptyTitle,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 12.h),
-            Text(
-              t.home.emptyMessage,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorState(BuildContext context, Translations t, Object error) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(32.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 64.sp,
-              color: Theme.of(context).colorScheme.error,
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              t.home.errorLoading,
-              style: Theme.of(context).textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16.h),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(koemyakuListStreamProvider);
-              },
-              child: Text(t.home.retry),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -155,15 +86,15 @@ class _HomePageState extends ConsumerState<HomePage> {
       await repository.deleteKoemyaku(koemyaku.id);
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.home.deleteSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(t.home.deleteSuccess)));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(t.home.deleteError)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(t.home.deleteError)));
       }
     }
   }
@@ -179,6 +110,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   void _onShare(KoemyakuData koemyaku) {
     final t = Translations.of(context);
     final shareText = '${koemyaku.title}\n${koemyaku.message}';
-    SharePlus.instance.share(ShareParams(text: shareText, subject: t.home.shareSubject));
+    SharePlus.instance.share(
+      ShareParams(text: shareText, subject: t.home.shareSubject),
+    );
   }
 }
