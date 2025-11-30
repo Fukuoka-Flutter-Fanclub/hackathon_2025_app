@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hackathon_2025_app/core/services/auth_service.dart';
+import 'package:hackathon_2025_app/features/home/presentation/pages/home_page.dart';
 import 'package:hackathon_2025_app/core/services/koemyaku_service.dart';
 import 'package:hackathon_2025_app/core/services/location_service.dart';
 import 'package:hackathon_2025_app/core/widgets/map_loading_widget.dart';
@@ -338,8 +341,8 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
             context,
           ).showSnackBar(SnackBar(content: Text(t.home.updateSuccess)));
 
-          // 編集後、前の画面に戻る
-          Navigator.of(context).pop();
+          // 編集後、ホーム画面に遷移
+          context.go(HomePage.routeName);
         }
       } else {
         // 新規作成モード
@@ -355,10 +358,8 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
             context,
           ).showSnackBar(SnackBar(content: Text(t.map.saveSuccess)));
 
-          // 保存後、マーカーをクリア
-          setState(() {
-            _savedMarkers.clear();
-          });
+          // 保存後、ホーム画面に遷移
+          context.go(HomePage.routeName);
         }
       }
     } catch (e) {
@@ -380,6 +381,8 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
 
   @override
   Widget build(BuildContext context) {
+    final t = Translations.of(context);
+
     // ローディング中はインジケータを表示
     if (_isLoading) {
       return const MapLoadingWidget();
@@ -388,141 +391,126 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
     // 現在位置が取得できなかった場合のフォールバック（東京駅）
     final center = _currentPosition ?? const LatLng(35.6812, 139.7671);
 
-    return Scaffold(
-      body: SafeArea(
-        child: FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            initialCenter: center,
-            initialZoom: _initialZoom,
-            onTap: (tapPosition, latLng) {
-              _onMapTapped(latLng);
-            },
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: Text(t.map.editTitle),
+            centerTitle: true,
+            actions: [
+              if (_savedMarkers.isNotEmpty && !_isSaving)
+                TextButton(
+                  onPressed: _saveKoemyaku,
+                  child: Text(t.common.save),
+                ),
+            ],
           ),
-          children: [
-            TileLayer(
-              urlTemplate:
-                  'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-              userAgentPackageName: 'com.example.hackathon_2025_app',
+          body: FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: center,
+              initialZoom: _initialZoom,
+              onTap: (tapPosition, latLng) {
+                _onMapTapped(latLng);
+              },
             ),
-            if (_currentPosition != null && _isLocationEnabled)
-              MarkerLayer(
-                markers: [
-                  Marker(
-                    point: _currentPosition!,
-                    width: 60,
-                    height: 60,
-                    child: CurrentLocationMarker(heading: _heading),
-                  ),
-                ],
+            children: [
+              TileLayer(
+                urlTemplate:
+                    'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+                userAgentPackageName: 'com.example.hackathon_2025_app',
               ),
-
-            // 選択中のマーカーの円形エリア
-            if (_selectedMarker != null)
-              CircleLayer(
-                circles: [
-                  CircleMarker(
-                    point: _selectedMarker!.latLng,
-                    radius: _tempRadius,
-                    useRadiusInMeter: true,
-                    color: Colors.blue.withValues(alpha: 0.2),
-                    borderColor: Colors.blue.withValues(alpha: 0.5),
-                    borderStrokeWidth: 2,
-                  ),
-                ],
-              ),
-
-            // 保存されたマーカーの円形エリア
-            CircleLayer(
-              circles: _savedMarkers
-                  .where((marker) => marker.id != _selectedMarker?.id)
-                  .map(
-                    (marker) => CircleMarker(
-                      point: marker.latLng,
-                      radius: marker.radius,
+              if (_currentPosition != null && _isLocationEnabled)
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: _currentPosition!,
+                      width: 60,
+                      height: 60,
+                      child: CurrentLocationMarker(heading: _heading),
+                    ),
+                  ],
+                ),
+              // 選択中のマーカーの円形エリア
+              if (_selectedMarker != null)
+                CircleLayer(
+                  circles: [
+                    CircleMarker(
+                      point: _selectedMarker!.latLng,
+                      radius: _tempRadius,
                       useRadiusInMeter: true,
-                      color: Colors.red.withValues(alpha: 0.2),
-                      borderColor: Colors.red.withValues(alpha: 0.5),
+                      color: Colors.blue.withValues(alpha: 0.2),
+                      borderColor: Colors.blue.withValues(alpha: 0.5),
                       borderStrokeWidth: 2,
                     ),
-                  )
-                  .toList(),
-            ),
-            // 保存されたピン（選択中のピンは除外）
-            MarkerLayer(
-              markers: _savedMarkers
-                  .where((marker) => marker.id != _selectedMarker?.id)
-                  .map(
-                    (marker) => Marker(
-                      point: marker.latLng,
-                      width: 40,
-                      height: 59,
-                      rotate: false,
-                      alignment: Alignment.topCenter,
-                      child: GestureDetector(
-                        onTap: () => _onSavedMarkerTapped(marker),
-                        child: SvgPicture.asset('assets/images/marker.svg'),
+                  ],
+                ),
+              // 保存されたマーカーの円形エリア
+              CircleLayer(
+                circles: _savedMarkers
+                    .where((marker) => marker.id != _selectedMarker?.id)
+                    .map(
+                      (marker) => CircleMarker(
+                        point: marker.latLng,
+                        radius: marker.radius,
+                        useRadiusInMeter: true,
+                        color: Colors.red.withValues(alpha: 0.2),
+                        borderColor: Colors.red.withValues(alpha: 0.5),
+                        borderStrokeWidth: 2,
                       ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            // 選択中のピン
-            if (_selectedMarker != null)
+                    )
+                    .toList(),
+              ),
+              // 保存されたピン（選択中のピンは除外）
               MarkerLayer(
-                markers: [
-                  Marker(
-                    point: _selectedMarker!.latLng,
-                    width: 50,
-                    height: 74,
-                    rotate: false,
-                    alignment: Alignment.topCenter,
-                    child: SvgPicture.asset(
-                      'assets/images/marker.svg',
+                markers: _savedMarkers
+                    .where((marker) => marker.id != _selectedMarker?.id)
+                    .map(
+                      (marker) => Marker(
+                        point: marker.latLng,
+                        width: 40,
+                        height: 59,
+                        rotate: false,
+                        alignment: Alignment.topCenter,
+                        child: GestureDetector(
+                          onTap: () => _onSavedMarkerTapped(marker),
+                          child: SvgPicture.asset('assets/images/marker.svg'),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              // 選択中のピン
+              if (_selectedMarker != null)
+                MarkerLayer(
+                  markers: [
+                    Marker(
+                      point: _selectedMarker!.latLng,
                       width: 50,
                       height: 74,
+                      rotate: false,
+                      alignment: Alignment.topCenter,
+                      child: SvgPicture.asset(
+                        'assets/images/marker.svg',
+                        width: 50,
+                        height: 74,
+                      ),
                     ),
+                  ],
+                ),
+              RichAttributionWidget(
+                attributions: [
+                  TextSourceAttribution(
+                    'OpenStreetMap contributors',
+                    onTap: () {},
                   ),
                 ],
               ),
-            RichAttributionWidget(
-              attributions: [
-                TextSourceAttribution(
-                  'OpenStreetMap contributors',
-                  onTap: () {},
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(right: 16, bottom: 50),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // 保存ボタン（マーカーが1つ以上ある場合のみ表示）
-            if (_savedMarkers.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: FloatingActionButton(
-                  heroTag: 'save',
-                  onPressed: _isSaving ? null : _saveKoemyaku,
-                  child: _isSaving
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Icon(Icons.save),
-                ),
-              ),
-            // 現在位置ボタン
-            FloatingActionButton(
+            ],
+          ),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(right: 16, bottom: 50),
+            child: FloatingActionButton(
               heroTag: 'location',
               onPressed: () {
                 if (_currentPosition != null) {
@@ -531,10 +519,37 @@ class _MapEditPageState extends ConsumerState<MapEditPage>
               },
               child: const Icon(Icons.my_location),
             ),
-          ],
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        // 保存中のオーバーレイ
+        if (_isSaving)
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.3),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(color: Colors.white),
+                      const SizedBox(height: 16),
+                      Text(
+                        t.common.saving,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

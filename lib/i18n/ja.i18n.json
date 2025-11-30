@@ -23,6 +23,7 @@
     "updateError": "更新に失敗しました"
   },
   "map": {
+    "editTitle": "タップして声を追加",
     "markerBottomSheet": {
       "addPinConfirmation": "この場所にピンを追加しますか？",
       "editPinConfirmation": "このピンを編集しますか？",

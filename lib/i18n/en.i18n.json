@@ -23,6 +23,7 @@
     "updateError": "Failed to update"
   },
   "map": {
+    "editTitle": "Tap to add voice",
     "markerBottomSheet": {
       "addPinConfirmation": "Add a pin to this location?",
       "editPinConfirmation": "Edit this pin?",

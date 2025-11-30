@@ -89,6 +89,7 @@ class _TranslationsMapZhTw implements TranslationsMapEn {
 	final TranslationsZhTw _root; // ignore: unused_field
 
 	// Translations
+	@override String get editTitle => '點擊添加聲音';
 	@override late final _TranslationsMapMarkerBottomSheetZhTw markerBottomSheet = _TranslationsMapMarkerBottomSheetZhTw._(_root);
 	@override String get saveKoemyaku => '儲存聲脈';
 	@override String get title => '標題';
@@ -202,6 +203,7 @@ extension on TranslationsZhTw {
 			'home.editKoemyaku' => '編輯聲脈',
 			'home.updateSuccess' => '更新成功',
 			'home.updateError' => '更新失敗',
+			'map.editTitle' => '點擊添加聲音',
 			'map.markerBottomSheet.addPinConfirmation' => '要在此位置新增圖釘嗎？',
 			'map.markerBottomSheet.editPinConfirmation' => '要編輯此圖釘嗎？',
 			'map.markerBottomSheet.latitude' => '緯度',

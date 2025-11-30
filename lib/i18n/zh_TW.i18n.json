@@ -23,6 +23,7 @@
     "updateError": "更新失敗"
   },
   "map": {
+    "editTitle": "點擊添加聲音",
     "markerBottomSheet": {
       "addPinConfirmation": "要在此位置新增圖釘嗎？",
       "editPinConfirmation": "要編輯此圖釘嗎？",

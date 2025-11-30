@@ -89,6 +89,7 @@ class _TranslationsMapJa implements TranslationsMapEn {
 	final TranslationsJa _root; // ignore: unused_field
 
 	// Translations
+	@override String get editTitle => 'タップして声を追加';
 	@override late final _TranslationsMapMarkerBottomSheetJa markerBottomSheet = _TranslationsMapMarkerBottomSheetJa._(_root);
 	@override String get saveKoemyaku => 'こえみゃくを保存';
 	@override String get title => 'タイトル';
@@ -202,6 +203,7 @@ extension on TranslationsJa {
 			'home.editKoemyaku' => 'こえみゃくを編集',
 			'home.updateSuccess' => '更新しました',
 			'home.updateError' => '更新に失敗しました',
+			'map.editTitle' => 'タップして声を追加',
 			'map.markerBottomSheet.addPinConfirmation' => 'この場所にピンを追加しますか？',
 			'map.markerBottomSheet.editPinConfirmation' => 'このピンを編集しますか？',
 			'map.markerBottomSheet.latitude' => '緯度',

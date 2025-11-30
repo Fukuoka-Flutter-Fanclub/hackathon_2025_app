@@ -130,6 +130,10 @@ class TranslationsMapEn {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+
+	/// en: 'Tap to add voice'
+	String get editTitle => 'Tap to add voice';
+
 	late final TranslationsMapMarkerBottomSheetEn markerBottomSheet = TranslationsMapMarkerBottomSheetEn._(_root);
 
 	/// en: 'Save Koemyaku'
@@ -337,6 +341,7 @@ extension on Translations {
 			'home.editKoemyaku' => 'Edit KoeMyaku',
 			'home.updateSuccess' => 'Updated successfully',
 			'home.updateError' => 'Failed to update',
+			'map.editTitle' => 'Tap to add voice',
 			'map.markerBottomSheet.addPinConfirmation' => 'Add a pin to this location?',
 			'map.markerBottomSheet.editPinConfirmation' => 'Edit this pin?',
 			'map.markerBottomSheet.latitude' => 'Latitude',
