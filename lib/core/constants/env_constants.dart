@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class EnvConstants {
-  static const String _defaultWebBaseUrl = 'https://hackathon2025app.web.app/#';
+  static const String _defaultWebBaseUrl = 'https://hackathon2025app.web.app';
 
   String webClientId = '';
   String iosClientId = '';

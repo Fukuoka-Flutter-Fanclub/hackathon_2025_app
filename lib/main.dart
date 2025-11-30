@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'dart:async';
 
 // 追加：多言語対応のためのインポート
@@ -17,6 +18,9 @@ import 'package:hackathon_2025_app/firebase_options.dart';
 import 'package:hackathon_2025_app/i18n/strings.g.dart';
 
 void main() {
+  // Path URL strategyを使用（#なしのきれいなURL）
+  usePathUrlStrategy();
+
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();

@@ -99,8 +99,16 @@ class AudioPlaybackService {
       await _initPlayer();
       _currentPath = path;
 
-      // ソースを設定
-      await _player!.setSource(DeviceFileSource(path));
+      // ソースを設定（URLかローカルファイルかを判定）
+      final Source source;
+      if (path.startsWith('http://') || path.startsWith('https://')) {
+        // Web版やリモートファイルの場合はUrlSourceを使用
+        source = UrlSource(path);
+      } else {
+        // ローカルファイルの場合はDeviceFileSourceを使用
+        source = DeviceFileSource(path);
+      }
+      await _player!.setSource(source);
 
       // 再生時間を取得
       final duration = await _player!.getDuration();
