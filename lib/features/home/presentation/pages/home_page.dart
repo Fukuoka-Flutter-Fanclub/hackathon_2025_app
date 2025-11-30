@@ -42,6 +42,15 @@ class _HomePageState extends ConsumerState<HomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      floatingActionButton: FloatingActionButton.large(
+        onPressed: () {
+          context.push(MapEditPage.routeName);
+        },
+        elevation: 0,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: koemyakuListAsync.when(
         skipLoadingOnRefresh: true,
         data: (koemyakuList) {
