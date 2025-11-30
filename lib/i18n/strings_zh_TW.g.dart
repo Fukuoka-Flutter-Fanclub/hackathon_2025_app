@@ -43,6 +43,7 @@ class TranslationsZhTw with BaseTranslations<AppLocale, Translations> implements
 	@override late final _TranslationsWelcomeZhTw welcome = _TranslationsWelcomeZhTw._(_root);
 	@override late final _TranslationsFinderZhTw finder = _TranslationsFinderZhTw._(_root);
 	@override late final _TranslationsFinderWebZhTw finderWeb = _TranslationsFinderWebZhTw._(_root);
+	@override late final _TranslationsShareZhTw share = _TranslationsShareZhTw._(_root);
 }
 
 // Path: common
@@ -158,6 +159,19 @@ class _TranslationsFinderWebZhTw implements TranslationsFinderWebEn {
 	@override String get backToHome => '返回首頁';
 }
 
+// Path: share
+class _TranslationsShareZhTw implements TranslationsShareEn {
+	_TranslationsShareZhTw._(this._root);
+
+	final TranslationsZhTw _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '分享';
+	@override String get copyLink => '複製連結';
+	@override String get linkCopied => '已複製連結';
+	@override String get close => '關閉';
+}
+
 // Path: map.markerBottomSheet
 class _TranslationsMapMarkerBottomSheetZhTw implements TranslationsMapMarkerBottomSheetEn {
 	_TranslationsMapMarkerBottomSheetZhTw._(this._root);
@@ -251,6 +265,10 @@ extension on TranslationsZhTw {
 			'finderWeb.compassNotSupportedMessage' => '此裝置或瀏覽器不支援指南針。我們將僅使用位置資訊進行導航。',
 			'finderWeb.continueAnyway' => '繼續',
 			'finderWeb.backToHome' => '返回首頁',
+			'share.title' => '分享',
+			'share.copyLink' => '複製連結',
+			'share.linkCopied' => '已複製連結',
+			'share.close' => '關閉',
 			_ => null,
 		};
 	}

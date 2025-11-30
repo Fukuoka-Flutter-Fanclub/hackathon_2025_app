@@ -79,5 +79,11 @@
     "compassNotSupportedMessage": "このデバイスまたはブラウザではコンパスがサポートされていません。位置情報のみで案内します。",
     "continueAnyway": "続ける",
     "backToHome": "ホームに戻る"
+  },
+  "share": {
+    "title": "共有",
+    "copyLink": "リンクをコピー",
+    "linkCopied": "リンクをコピーしました",
+    "close": "閉じる"
   }
 }

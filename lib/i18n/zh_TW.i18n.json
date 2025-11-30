@@ -79,5 +79,11 @@
     "compassNotSupportedMessage": "此裝置或瀏覽器不支援指南針。我們將僅使用位置資訊進行導航。",
     "continueAnyway": "繼續",
     "backToHome": "返回首頁"
+  },
+  "share": {
+    "title": "分享",
+    "copyLink": "複製連結",
+    "linkCopied": "已複製連結",
+    "close": "關閉"
   }
 }

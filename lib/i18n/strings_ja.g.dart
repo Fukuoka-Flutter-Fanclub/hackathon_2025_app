@@ -43,6 +43,7 @@ class TranslationsJa with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsWelcomeJa welcome = _TranslationsWelcomeJa._(_root);
 	@override late final _TranslationsFinderJa finder = _TranslationsFinderJa._(_root);
 	@override late final _TranslationsFinderWebJa finderWeb = _TranslationsFinderWebJa._(_root);
+	@override late final _TranslationsShareJa share = _TranslationsShareJa._(_root);
 }
 
 // Path: common
@@ -158,6 +159,19 @@ class _TranslationsFinderWebJa implements TranslationsFinderWebEn {
 	@override String get backToHome => 'ホームに戻る';
 }
 
+// Path: share
+class _TranslationsShareJa implements TranslationsShareEn {
+	_TranslationsShareJa._(this._root);
+
+	final TranslationsJa _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '共有';
+	@override String get copyLink => 'リンクをコピー';
+	@override String get linkCopied => 'リンクをコピーしました';
+	@override String get close => '閉じる';
+}
+
 // Path: map.markerBottomSheet
 class _TranslationsMapMarkerBottomSheetJa implements TranslationsMapMarkerBottomSheetEn {
 	_TranslationsMapMarkerBottomSheetJa._(this._root);
@@ -251,6 +265,10 @@ extension on TranslationsJa {
 			'finderWeb.compassNotSupportedMessage' => 'このデバイスまたはブラウザではコンパスがサポートされていません。位置情報のみで案内します。',
 			'finderWeb.continueAnyway' => '続ける',
 			'finderWeb.backToHome' => 'ホームに戻る',
+			'share.title' => '共有',
+			'share.copyLink' => 'リンクをコピー',
+			'share.linkCopied' => 'リンクをコピーしました',
+			'share.close' => '閉じる',
 			_ => null,
 		};
 	}

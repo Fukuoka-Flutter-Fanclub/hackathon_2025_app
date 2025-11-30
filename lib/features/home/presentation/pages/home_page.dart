@@ -8,10 +8,10 @@ import 'package:hackathon_2025_app/features/home/domain/providers/koemyaku_list_
 import 'package:hackathon_2025_app/features/home/presentation/widgets/empty_state_widget.dart';
 import 'package:hackathon_2025_app/features/home/presentation/widgets/error_state_widget.dart';
 import 'package:hackathon_2025_app/features/home/presentation/widgets/koemyaku_list_item.dart';
+import 'package:hackathon_2025_app/features/home/presentation/widgets/share_bottom_sheet.dart';
 import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 import 'package:hackathon_2025_app/features/map/presentation/pages/map_edit_page.dart';
 import 'package:hackathon_2025_app/i18n/strings.g.dart';
-import 'package:share_plus/share_plus.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -118,10 +118,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   void _onShare(KoemyakuData koemyaku) {
-    final t = Translations.of(context);
-    final shareText = '${koemyaku.title}\n${koemyaku.message}';
-    SharePlus.instance.share(
-      ShareParams(text: shareText, subject: t.home.shareSubject),
+    ShareBottomSheet.show(
+      context,
+      koemyakuId: koemyaku.id,
+      title: koemyaku.title,
     );
   }
 }

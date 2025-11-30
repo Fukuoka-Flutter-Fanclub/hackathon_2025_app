@@ -79,5 +79,11 @@
     "compassNotSupportedMessage": "Compass is not supported on this device or browser. We'll guide you using location only.",
     "continueAnyway": "Continue",
     "backToHome": "Back to Home"
+  },
+  "share": {
+    "title": "Share",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied",
+    "close": "Close"
   }
 }

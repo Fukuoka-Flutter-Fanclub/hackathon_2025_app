@@ -46,6 +46,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsWelcomeEn welcome = TranslationsWelcomeEn._(_root);
 	late final TranslationsFinderEn finder = TranslationsFinderEn._(_root);
 	late final TranslationsFinderWebEn finderWeb = TranslationsFinderWebEn._(_root);
+	late final TranslationsShareEn share = TranslationsShareEn._(_root);
 }
 
 // Path: common
@@ -278,6 +279,27 @@ class TranslationsFinderWebEn {
 	String get backToHome => 'Back to Home';
 }
 
+// Path: share
+class TranslationsShareEn {
+	TranslationsShareEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Share'
+	String get title => 'Share';
+
+	/// en: 'Copy Link'
+	String get copyLink => 'Copy Link';
+
+	/// en: 'Link copied'
+	String get linkCopied => 'Link copied';
+
+	/// en: 'Close'
+	String get close => 'Close';
+}
+
 // Path: map.markerBottomSheet
 class TranslationsMapMarkerBottomSheetEn {
 	TranslationsMapMarkerBottomSheetEn._(this._root);
@@ -389,6 +411,10 @@ extension on Translations {
 			'finderWeb.compassNotSupportedMessage' => 'Compass is not supported on this device or browser. We\'ll guide you using location only.',
 			'finderWeb.continueAnyway' => 'Continue',
 			'finderWeb.backToHome' => 'Back to Home',
+			'share.title' => 'Share',
+			'share.copyLink' => 'Copy Link',
+			'share.linkCopied' => 'Link copied',
+			'share.close' => 'Close',
 			_ => null,
 		};
 	}
