@@ -93,6 +93,9 @@ class TranslationsHomeEn {
 	/// en: 'Play'
 	String get play => 'Play';
 
+	/// en: 'Edit'
+	String get edit => 'Edit';
+
 	/// en: 'Share'
 	String get share => 'Share';
 
@@ -353,6 +356,7 @@ extension on Translations {
 			'home.errorLoading' => 'Failed to load',
 			'home.retry' => 'Retry',
 			'home.play' => 'Play',
+			'home.edit' => 'Edit',
 			'home.share' => 'Share',
 			'home.shareSubject' => 'Share KoeMyaku',
 			'home.delete' => 'Delete',

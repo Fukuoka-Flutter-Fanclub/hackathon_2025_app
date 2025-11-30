@@ -71,6 +71,7 @@ class _TranslationsHomeJa implements TranslationsHomeEn {
 	@override String get errorLoading => '読み込みに失敗しました';
 	@override String get retry => '再試行';
 	@override String get play => '再生';
+	@override String get edit => '編集';
 	@override String get share => '共有';
 	@override String get shareSubject => 'こえみゃくを共有';
 	@override String get delete => '削除';
@@ -207,6 +208,7 @@ extension on TranslationsJa {
 			'home.errorLoading' => '読み込みに失敗しました',
 			'home.retry' => '再試行',
 			'home.play' => '再生',
+			'home.edit' => '編集',
 			'home.share' => '共有',
 			'home.shareSubject' => 'こえみゃくを共有',
 			'home.delete' => '削除',

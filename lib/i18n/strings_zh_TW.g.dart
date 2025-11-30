@@ -71,6 +71,7 @@ class _TranslationsHomeZhTw implements TranslationsHomeEn {
 	@override String get errorLoading => '載入失敗';
 	@override String get retry => '重試';
 	@override String get play => '播放';
+	@override String get edit => '編輯';
 	@override String get share => '分享';
 	@override String get shareSubject => '分享聲脈';
 	@override String get delete => '刪除';
@@ -207,6 +208,7 @@ extension on TranslationsZhTw {
 			'home.errorLoading' => '載入失敗',
 			'home.retry' => '重試',
 			'home.play' => '播放',
+			'home.edit' => '編輯',
 			'home.share' => '分享',
 			'home.shareSubject' => '分享聲脈',
 			'home.delete' => '刪除',

@@ -11,7 +11,6 @@ class KoemyakuListItem extends StatelessWidget {
     required this.onTap,
     required this.onDelete,
     required this.onEdit,
-    required this.onPlay,
     required this.onShare,
   });
 
@@ -19,7 +18,6 @@ class KoemyakuListItem extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback onDelete;
   final VoidCallback onEdit;
-  final VoidCallback onPlay;
   final VoidCallback onShare;
 
   @override
@@ -143,17 +141,16 @@ class KoemyakuListItem extends StatelessWidget {
                     ),
                     const Spacer(),
 
-                    // Play button
-                    if (_hasVoice)
-                      IconButton(
-                        onPressed: onPlay,
-                        icon: Icon(
-                          Icons.play_circle_filled,
-                          color: colorScheme.primary,
-                        ),
-                        tooltip: t.home.play,
-                        visualDensity: VisualDensity.compact,
+                    // Edit button
+                    IconButton(
+                      onPressed: onEdit,
+                      icon: Icon(
+                        Icons.edit,
+                        color: colorScheme.primary,
                       ),
+                      tooltip: t.home.edit,
+                      visualDensity: VisualDensity.compact,
+                    ),
 
                     // Share button
                     IconButton(
@@ -172,12 +169,6 @@ class KoemyakuListItem extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  bool get _hasVoice {
-    return koemyaku.markers.any(
-      (marker) => marker.voicePath != null && marker.voicePath!.isNotEmpty,
     );
   }
 

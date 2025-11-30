@@ -8,6 +8,7 @@ import 'package:hackathon_2025_app/features/finder/domain/providers/finder_state
 import 'package:hackathon_2025_app/features/finder/presentation/widgets/animated_compass_circle.dart';
 import 'package:hackathon_2025_app/features/finder/presentation/widgets/compass_circle.dart';
 import 'package:hackathon_2025_app/features/finder/presentation/widgets/distance_indicator.dart';
+import 'package:hackathon_2025_app/features/finder/presentation/widgets/finder_intro_overlay.dart';
 import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 import 'package:hackathon_2025_app/features/map/presentation/widgets/current_location_marker.dart';
 import 'package:hackathon_2025_app/i18n/strings.g.dart';
@@ -26,6 +27,8 @@ class FinderPage extends ConsumerStatefulWidget {
 }
 
 class _FinderPageState extends ConsumerState<FinderPage> {
+  bool _showIntroOverlay = true;
+
   @override
   void initState() {
     super.initState();
@@ -55,37 +58,63 @@ class _FinderPageState extends ConsumerState<FinderPage> {
       }
     });
 
+    final isLoading = finderState.status == FinderStatus.initializing;
+
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => _onClose(context),
-        ),
-        title: Text(widget.koemyaku.title, style: theme.textTheme.titleMedium),
-        centerTitle: true,
-        actions: [
-          // 進捗表示
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: Center(
-              child: Text(
-                '${finderState.visitedMarkerIds.length}/${finderState.allMarkers.length}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
+      appBar: _showIntroOverlay
+          ? null
+          : AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () => _onClose(context),
               ),
+              title: Text(
+                widget.koemyaku.title,
+                style: theme.textTheme.titleMedium,
+              ),
+              centerTitle: true,
+              actions: [
+                // 進捗表示
+                Padding(
+                  padding: EdgeInsets.only(right: 16.w),
+                  child: Center(
+                    child: Text(
+                      '${finderState.visitedMarkerIds.length}/${finderState.allMarkers.length}',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.7,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
+      body: Stack(
+        children: [
+          SafeArea(child: _buildBody(context, finderState, audioService, t)),
+          if (_showIntroOverlay)
+            FinderIntroOverlay(
+              title: widget.koemyaku.title,
+              message: widget.koemyaku.message,
+              isLoading: isLoading,
+              onDismissed: () {
+                setState(() {
+                  _showIntroOverlay = false;
+                });
+              },
+            ),
         ],
       ),
-      body: SafeArea(child: _buildBody(context, finderState, audioService, t)),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showMapBottomSheet(context, finderState),
-        child: const Icon(Icons.map),
-      ),
+      floatingActionButton: _showIntroOverlay
+          ? null
+          : FloatingActionButton(
+              onPressed: () => _showMapBottomSheet(context, finderState),
+              child: const Icon(Icons.map),
+            ),
     );
   }
 
@@ -359,8 +388,12 @@ class _FinderPageState extends ConsumerState<FinderPage> {
 
     // 初期中心位置を計算
     LatLng initialCenter;
-    if (initialState.currentLatitude != 0 && initialState.currentLongitude != 0) {
-      initialCenter = LatLng(initialState.currentLatitude, initialState.currentLongitude);
+    if (initialState.currentLatitude != 0 &&
+        initialState.currentLongitude != 0) {
+      initialCenter = LatLng(
+        initialState.currentLatitude,
+        initialState.currentLongitude,
+      );
     } else if (initialState.allMarkers.isNotEmpty) {
       initialCenter = initialState.allMarkers.first.latLng;
     } else {
@@ -390,16 +423,6 @@ class _FinderPageState extends ConsumerState<FinderPage> {
                 children: [
                   Column(
                     children: [
-                      // ハンドル
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 12.h),
-                        width: 40.w,
-                        height: 4.h,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(2.r),
-                        ),
-                      ),
                       // マップ
                       Expanded(
                         child: ClipRRect(
@@ -407,12 +430,16 @@ class _FinderPageState extends ConsumerState<FinderPage> {
                             top: Radius.circular(16.r),
                           ),
                           child: FlutterMap(
-                            options: MapOptions(initialCenter: initialCenter, initialZoom: 15),
+                            options: MapOptions(
+                              initialCenter: initialCenter,
+                              initialZoom: 15,
+                            ),
                             children: [
                               TileLayer(
                                 urlTemplate:
                                     'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-                                userAgentPackageName: 'com.example.hackathon_2025_app',
+                                userAgentPackageName:
+                                    'com.example.hackathon_2025_app',
                               ),
                               // 現在地マーカー
                               if (state.currentLatitude != 0 &&
@@ -435,10 +462,10 @@ class _FinderPageState extends ConsumerState<FinderPage> {
                               // 音声マーカー
                               MarkerLayer(
                                 markers: state.allMarkers.map((marker) {
-                                  final isVisited = state.visitedMarkerIds.contains(
-                                    marker.id,
-                                  );
-                                  final isTarget = state.currentTarget?.id == marker.id;
+                                  final isVisited = state.visitedMarkerIds
+                                      .contains(marker.id);
+                                  final isTarget =
+                                      state.currentTarget?.id == marker.id;
                                   return Marker(
                                     point: marker.latLng,
                                     width: 40,

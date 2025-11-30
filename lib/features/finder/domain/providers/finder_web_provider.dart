@@ -16,8 +16,8 @@ import 'package:latlong2/latlong.dart';
 /// Web用 Finder Notifier Provider
 final finderWebNotifierProvider =
     StateNotifierProvider.autoDispose<FinderWebNotifier, FinderWebState>((ref) {
-  return FinderWebNotifier(ref);
-});
+      return FinderWebNotifier(ref);
+    });
 
 /// Web用 Finder の状態
 enum FinderWebStatus {
@@ -199,9 +199,7 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
     final compassService = _ref.read(webCompassServiceProvider);
     final permissionStatus = await compassService.requestPermission();
 
-    state = state.copyWith(
-      compassPermissionStatus: permissionStatus,
-    );
+    state = state.copyWith(compassPermissionStatus: permissionStatus);
 
     // 権限取得後、位置情報トラッキングを開始
     await _startTracking();
@@ -297,7 +295,9 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
     if (state.status == FinderWebStatus.initializing) {
       _findNearestMarker(currentLatLng);
       state = state.copyWith(status: FinderWebStatus.navigating);
-    } else if (state.status == FinderWebStatus.navigating) {
+    } else if (state.status == FinderWebStatus.navigating ||
+        state.status == FinderWebStatus.arrived) {
+      // navigating中またはarrived中も位置情報を更新
       _updateNavigationState(currentLatLng);
     }
   }
@@ -348,13 +348,21 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
 
     final bearing = _calculateBearing(currentPosition, target.latLng);
 
+    debugPrint(
+      'Navigation update: distance=${distance.toStringAsFixed(1)}m, radius=${target.radius}m, status=${state.status}',
+    );
+
     state = state.copyWith(
       distanceToTarget: distance,
       bearingToTarget: bearing,
     );
 
-    // 到着判定
-    if (distance <= target.radius) {
+    // 到着判定（navigating状態の場合のみ）
+    if (state.status == FinderWebStatus.navigating &&
+        distance <= target.radius) {
+      debugPrint(
+        'Triggering arrival: distance $distance <= radius ${target.radius}',
+      );
       _onArrived();
     }
   }
@@ -365,7 +373,8 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
     final deltaLon = (to.longitude - from.longitude) * math.pi / 180;
 
     final y = math.sin(deltaLon) * math.cos(lat2);
-    final x = math.cos(lat1) * math.sin(lat2) -
+    final x =
+        math.cos(lat1) * math.sin(lat2) -
         math.sin(lat1) * math.cos(lat2) * math.cos(deltaLon);
 
     var bearing = math.atan2(y, x) * 180 / math.pi;
@@ -378,23 +387,58 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
     final target = state.currentTarget;
     if (target == null) return;
 
+    debugPrint(
+      'Arrived at marker: ${target.id}, voicePath: ${target.voicePath}',
+    );
+
     state = state.copyWith(status: FinderWebStatus.arrived);
 
     // 音声を再生
-    if (target.voicePath != null) {
+    if (target.voicePath != null && target.voicePath!.isNotEmpty) {
       _playAudio(target.voicePath!);
+    } else {
+      debugPrint('No voice path for marker: ${target.id}');
+      // 音声がない場合は少し待ってから次へ
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          _onPlaybackComplete();
+        }
+      });
     }
   }
 
   Future<void> _playAudio(String path) async {
+    debugPrint('Playing audio: $path');
     try {
       final audioService = _ref.read(audioPlaybackServiceProvider);
-      await audioService.loadAudio(path);
-      await audioService.play();
+      final loaded = await audioService.loadAudio(path);
+      if (!loaded) {
+        debugPrint('Failed to load audio: $path');
+        // ロード失敗時は少し待ってから次へ進む（ユーザーが到着を認識できるように）
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) {
+            _onPlaybackComplete();
+          }
+        });
+        return;
+      }
+      final played = await audioService.play();
+      if (!played) {
+        debugPrint('Failed to play audio: $path');
+        Future.delayed(const Duration(seconds: 2), () {
+          if (mounted) {
+            _onPlaybackComplete();
+          }
+        });
+      }
     } catch (e) {
       debugPrint('Audio playback error: $e');
-      // エラーでも次に進む
-      _onPlaybackComplete();
+      // エラー時も少し待ってから次へ
+      Future.delayed(const Duration(seconds: 2), () {
+        if (mounted) {
+          _onPlaybackComplete();
+        }
+      });
     }
   }
 
@@ -415,8 +459,10 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
     state = state.copyWith(visitedMarkerIds: newVisitedIds);
 
     // 次のマーカーを探す
-    final currentPosition =
-        LatLng(state.currentLatitude, state.currentLongitude);
+    final currentPosition = LatLng(
+      state.currentLatitude,
+      state.currentLongitude,
+    );
     _findNearestMarker(currentPosition);
 
     if (state.currentTarget != null &&

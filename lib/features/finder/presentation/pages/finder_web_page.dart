@@ -8,6 +8,7 @@ import 'package:hackathon_2025_app/features/finder/domain/providers/finder_web_p
 import 'package:hackathon_2025_app/features/finder/presentation/widgets/animated_compass_circle.dart';
 import 'package:hackathon_2025_app/features/finder/presentation/widgets/compass_circle.dart';
 import 'package:hackathon_2025_app/features/finder/presentation/widgets/distance_indicator.dart';
+import 'package:hackathon_2025_app/features/finder/presentation/widgets/finder_intro_overlay.dart';
 import 'package:hackathon_2025_app/features/map/presentation/widgets/current_location_marker.dart';
 import 'package:hackathon_2025_app/i18n/strings.g.dart';
 import 'package:latlong2/latlong.dart';
@@ -26,6 +27,8 @@ class FinderWebPage extends ConsumerStatefulWidget {
 }
 
 class _FinderWebPageState extends ConsumerState<FinderWebPage> {
+  bool _showIntroOverlay = true;
+
   @override
   void initState() {
     super.initState();
@@ -50,18 +53,45 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
       }
     });
 
+    // オーバーレイ表示中のローディング判定
+    // koemyakuが取得されていてnavigating以外ならローディング中
+    final isLoading = state.koemyaku != null &&
+        state.status != FinderWebStatus.navigating &&
+        state.status != FinderWebStatus.arrived &&
+        state.status != FinderWebStatus.completed &&
+        state.status != FinderWebStatus.error;
+
+    // オーバーレイを表示するかどうか（koemyakuが取得できてから表示）
+    final shouldShowOverlay = _showIntroOverlay && state.koemyaku != null;
+
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      appBar: _buildAppBar(context, theme, state, t),
-      body: SafeArea(child: _buildBody(context, state, audioService, t)),
-      floatingActionButton:
-          state.status == FinderWebStatus.navigating ||
-              state.status == FinderWebStatus.arrived
-          ? FloatingActionButton(
-              onPressed: () => _showMapBottomSheet(context, state),
-              child: const Icon(Icons.map),
-            )
-          : null,
+      appBar: shouldShowOverlay ? null : _buildAppBar(context, theme, state, t),
+      body: Stack(
+        children: [
+          SafeArea(child: _buildBody(context, state, audioService, t)),
+          if (shouldShowOverlay)
+            FinderIntroOverlay(
+              title: state.koemyaku!.title,
+              message: state.koemyaku!.message,
+              isLoading: isLoading,
+              onDismissed: () {
+                setState(() {
+                  _showIntroOverlay = false;
+                });
+              },
+            ),
+        ],
+      ),
+      floatingActionButton: shouldShowOverlay
+          ? null
+          : (state.status == FinderWebStatus.navigating ||
+                  state.status == FinderWebStatus.arrived)
+              ? FloatingActionButton(
+                  onPressed: () => _showMapBottomSheet(context, state),
+                  child: const Icon(Icons.map),
+                )
+              : null,
     );
   }
 
@@ -79,13 +109,14 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.close),
-        onPressed: () => _onClose(context),
-      ),
+      // leading: IconButton(
+      //   icon: const Icon(Icons.close),
+      //   onPressed: () => _onClose(context),
+      // ),
       title: Text(
         state.koemyaku?.title ?? '',
         style: theme.textTheme.titleMedium,
+        textAlign: TextAlign.center,
       ),
       centerTitle: true,
       actions: [
@@ -468,8 +499,12 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
 
     // 初期中心位置を計算
     LatLng initialCenter;
-    if (initialState.currentLatitude != 0 && initialState.currentLongitude != 0) {
-      initialCenter = LatLng(initialState.currentLatitude, initialState.currentLongitude);
+    if (initialState.currentLatitude != 0 &&
+        initialState.currentLongitude != 0) {
+      initialCenter = LatLng(
+        initialState.currentLatitude,
+        initialState.currentLongitude,
+      );
     } else if (initialState.allMarkers.isNotEmpty) {
       initialCenter = initialState.allMarkers.first.latLng;
     } else {
@@ -505,12 +540,16 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
                             top: Radius.circular(16.r),
                           ),
                           child: FlutterMap(
-                            options: MapOptions(initialCenter: initialCenter, initialZoom: 15),
+                            options: MapOptions(
+                              initialCenter: initialCenter,
+                              initialZoom: 15,
+                            ),
                             children: [
                               TileLayer(
                                 urlTemplate:
                                     'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-                                userAgentPackageName: 'com.example.hackathon_2025_app',
+                                userAgentPackageName:
+                                    'com.example.hackathon_2025_app',
                               ),
                               if (state.currentLatitude != 0 &&
                                   state.currentLongitude != 0)
@@ -531,10 +570,10 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
                                 ),
                               MarkerLayer(
                                 markers: state.allMarkers.map((marker) {
-                                  final isVisited = state.visitedMarkerIds.contains(
-                                    marker.id,
-                                  );
-                                  final isTarget = state.currentTarget?.id == marker.id;
+                                  final isVisited = state.visitedMarkerIds
+                                      .contains(marker.id);
+                                  final isTarget =
+                                      state.currentTarget?.id == marker.id;
                                   return Marker(
                                     point: marker.latLng,
                                     width: 40,

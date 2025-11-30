@@ -68,7 +68,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 onTap: () => _onKoemyakuTap(koemyaku),
                 onDelete: () => _onDelete(koemyaku),
                 onEdit: () => _onEdit(koemyaku),
-                onPlay: () => _onPlay(koemyaku),
                 onShare: () => _onShare(koemyaku),
               );
             },
@@ -111,10 +110,6 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   void _onEdit(KoemyakuData koemyaku) {
     context.push(MapEditPage.routeName, extra: koemyaku);
-  }
-
-  void _onPlay(KoemyakuData koemyaku) {
-    context.push(FinderPage.routeName, extra: koemyaku);
   }
 
   void _onShare(KoemyakuData koemyaku) {
