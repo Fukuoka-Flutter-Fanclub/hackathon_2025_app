@@ -112,58 +112,63 @@ class _FinderIntroOverlayState extends State<FinderIntroOverlay>
           return const SizedBox.shrink();
         }
 
-        return Opacity(
-          opacity: _fadeAnimation.value,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: _blurAnimation.value,
-              sigmaY: _blurAnimation.value,
-            ),
-            child: Container(
-              color: theme.colorScheme.surface.withValues(alpha: 0.85),
-              child: Transform.scale(
-                scale: _scaleAnimation.value,
-                child: SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32.w),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // アイコン（波紋アニメーション付き）
-                        _PulseIcon(
-                          icon: Icons.explore,
-                          color: theme.colorScheme.primary,
-                        ),
-                        SizedBox(height: 48.h),
-
-                        // タイトル
-                        Text(
-                          widget.title,
-                          style: theme.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 24.h),
-
-                        // メッセージ
-                        if (widget.message.isNotEmpty)
-                          Text(
-                            widget.message,
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.7),
-                              height: 1.6,
+        return Positioned.fill(
+          child: Opacity(
+            opacity: _fadeAnimation.value,
+            child: Material(
+              color: Colors.transparent,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: _blurAnimation.value,
+                  sigmaY: _blurAnimation.value,
+                ),
+                child: Container(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.85),
+                  child: Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: SafeArea(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 32.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // アイコン（波紋アニメーション付き）
+                            _PulseIcon(
+                              icon: Icons.explore,
+                              color: theme.colorScheme.primary,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
+                            SizedBox(height: 48.h),
 
-                        SizedBox(height: 64.h),
+                            // タイトル
+                            Text(
+                              widget.title,
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 24.h),
 
-                        // ローディングインジケーター
-                        _LoadingDots(color: theme.colorScheme.primary),
-                      ],
+                            // メッセージ
+                            if (widget.message.isNotEmpty)
+                              Text(
+                                widget.message,
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.7),
+                                  height: 1.6,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+
+                            SizedBox(height: 64.h),
+
+                            // ローディングインジケーター
+                            _LoadingDots(color: theme.colorScheme.primary),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
