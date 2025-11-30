@@ -370,6 +370,8 @@ class _FinderPageState extends ConsumerState<FinderPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
         initialChildSize: 0.6,
@@ -380,78 +382,103 @@ class _FinderPageState extends ConsumerState<FinderPage> {
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
           ),
-          child: Column(
+          child: Stack(
             children: [
-              // ハンドル
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 12.h),
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-              // マップ
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16.r),
+              Column(
+                children: [
+                  // ハンドル
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 12.h),
+                    width: 40.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2.r),
+                    ),
                   ),
-                  child: FlutterMap(
-                    options: MapOptions(initialCenter: center, initialZoom: 15),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-                        userAgentPackageName: 'com.example.hackathon_2025_app',
+                  // マップ
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
                       ),
-                      // 現在地マーカー
-                      if (state.currentLatitude != 0 &&
-                          state.currentLongitude != 0)
-                        MarkerLayer(
-                          markers: [
-                            Marker(
-                              point: LatLng(
-                                state.currentLatitude,
-                                state.currentLongitude,
-                              ),
-                              width: 60,
-                              height: 60,
-                              child: CurrentLocationMarker(
-                                heading: state.userHeading,
-                              ),
+                      child: FlutterMap(
+                        options: MapOptions(initialCenter: center, initialZoom: 15),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+                            userAgentPackageName: 'com.example.hackathon_2025_app',
+                          ),
+                          // 現在地マーカー
+                          if (state.currentLatitude != 0 &&
+                              state.currentLongitude != 0)
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  point: LatLng(
+                                    state.currentLatitude,
+                                    state.currentLongitude,
+                                  ),
+                                  width: 60,
+                                  height: 60,
+                                  child: CurrentLocationMarker(
+                                    heading: state.userHeading,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      // 音声マーカー
-                      MarkerLayer(
-                        markers: state.allMarkers.map((marker) {
-                          final isVisited = state.visitedMarkerIds.contains(
-                            marker.id,
-                          );
-                          final isTarget = state.currentTarget?.id == marker.id;
-                          return Marker(
-                            point: marker.latLng,
-                            width: 40,
-                            height: 40,
-                            child: _VoiceMarkerIcon(
-                              isVisited: isVisited,
-                              isTarget: isTarget,
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                      // Attribution
-                      RichAttributionWidget(
-                        attributions: [
-                          TextSourceAttribution(
-                            'OpenStreetMap contributors',
-                            onTap: () {},
+                          // 音声マーカー
+                          MarkerLayer(
+                            markers: state.allMarkers.map((marker) {
+                              final isVisited = state.visitedMarkerIds.contains(
+                                marker.id,
+                              );
+                              final isTarget = state.currentTarget?.id == marker.id;
+                              return Marker(
+                                point: marker.latLng,
+                                width: 40,
+                                height: 40,
+                                child: _VoiceMarkerIcon(
+                                  isVisited: isVisited,
+                                  isTarget: isTarget,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          // Attribution
+                          RichAttributionWidget(
+                            attributions: [
+                              TextSourceAttribution(
+                                'OpenStreetMap contributors',
+                                onTap: () {},
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
+                  ),
+                ],
+              ),
+              // 右上の閉じるボタン
+              Positioned(
+                top: 8.h,
+                right: 8.w,
+                child: Material(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.9),
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    customBorder: const CircleBorder(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.w),
+                      child: Icon(
+                        Icons.close,
+                        size: 24.sp,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
                   ),
                 ),
               ),

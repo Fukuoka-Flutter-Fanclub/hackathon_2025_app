@@ -500,57 +500,57 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
                         top: Radius.circular(16.r),
                       ),
                       child: FlutterMap(
-                    options: MapOptions(initialCenter: center, initialZoom: 15),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-                        userAgentPackageName: 'com.example.hackathon_2025_app',
-                      ),
-                      if (state.currentLatitude != 0 &&
-                          state.currentLongitude != 0)
-                        MarkerLayer(
-                          markers: [
-                            Marker(
-                              point: LatLng(
-                                state.currentLatitude,
-                                state.currentLongitude,
-                              ),
-                              width: 60,
-                              height: 60,
-                              child: CurrentLocationMarker(
-                                heading: state.userHeading,
-                              ),
+                        options: MapOptions(initialCenter: center, initialZoom: 15),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+                            userAgentPackageName: 'com.example.hackathon_2025_app',
+                          ),
+                          if (state.currentLatitude != 0 &&
+                              state.currentLongitude != 0)
+                            MarkerLayer(
+                              markers: [
+                                Marker(
+                                  point: LatLng(
+                                    state.currentLatitude,
+                                    state.currentLongitude,
+                                  ),
+                                  width: 60,
+                                  height: 60,
+                                  child: CurrentLocationMarker(
+                                    heading: state.userHeading,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      MarkerLayer(
-                        markers: state.allMarkers.map((marker) {
-                          final isVisited = state.visitedMarkerIds.contains(
-                            marker.id,
-                          );
-                          final isTarget = state.currentTarget?.id == marker.id;
-                          return Marker(
-                            point: marker.latLng,
-                            width: 40,
-                            height: 40,
-                            child: _VoiceMarkerIcon(
-                              isVisited: isVisited,
-                              isTarget: isTarget,
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                      RichAttributionWidget(
-                        attributions: [
-                          TextSourceAttribution(
-                            'OpenStreetMap contributors',
-                            onTap: () {},
+                          MarkerLayer(
+                            markers: state.allMarkers.map((marker) {
+                              final isVisited = state.visitedMarkerIds.contains(
+                                marker.id,
+                              );
+                              final isTarget = state.currentTarget?.id == marker.id;
+                              return Marker(
+                                point: marker.latLng,
+                                width: 40,
+                                height: 40,
+                                child: _VoiceMarkerIcon(
+                                  isVisited: isVisited,
+                                  isTarget: isTarget,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          RichAttributionWidget(
+                            attributions: [
+                              TextSourceAttribution(
+                                'OpenStreetMap contributors',
+                                onTap: () {},
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
                     ),
                   ),
                 ],
