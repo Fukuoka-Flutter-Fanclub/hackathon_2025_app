@@ -325,9 +325,11 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
 
     if (nearest != null) {
       final bearing = _calculateBearing(currentPosition, nearest.latLng);
+      // 表示用の距離はマーカー半径を考慮（ゾーン境界までの距離）
+      final effectiveDistance = math.max(0.0, nearestDistance - nearest.radius);
       state = state.copyWith(
         currentTarget: nearest,
-        distanceToTarget: nearestDistance,
+        distanceToTarget: effectiveDistance,
         bearingToTarget: bearing,
       );
     } else {
@@ -348,16 +350,19 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
 
     final bearing = _calculateBearing(currentPosition, target.latLng);
 
+    // 表示用の距離はマーカー半径を考慮（ゾーン境界までの距離）
+    final effectiveDistance = math.max(0.0, distance - target.radius);
+
     debugPrint(
-      'Navigation update: distance=${distance.toStringAsFixed(1)}m, radius=${target.radius}m, status=${state.status}',
+      'Navigation update: distance=${distance.toStringAsFixed(1)}m, effectiveDistance=${effectiveDistance.toStringAsFixed(1)}m, radius=${target.radius}m, status=${state.status}',
     );
 
     state = state.copyWith(
-      distanceToTarget: distance,
+      distanceToTarget: effectiveDistance,
       bearingToTarget: bearing,
     );
 
-    // 到着判定（navigating状態の場合のみ）
+    // 到着判定（navigating状態の場合のみ、中心からの距離が半径以内）
     if (state.status == FinderWebStatus.navigating &&
         distance <= target.radius) {
       debugPrint(

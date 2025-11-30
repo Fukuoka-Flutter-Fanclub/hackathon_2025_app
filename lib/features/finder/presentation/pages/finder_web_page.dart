@@ -53,16 +53,17 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
       }
     });
 
-    // オーバーレイ表示中のローディング判定
-    // koemyakuが取得されていてnavigating以外ならローディング中
-    final isLoading = state.koemyaku != null &&
-        state.status != FinderWebStatus.navigating &&
-        state.status != FinderWebStatus.arrived &&
-        state.status != FinderWebStatus.completed &&
-        state.status != FinderWebStatus.error;
+    // オーバーレイを表示するかどうか
+    // パーミッション許可後（initializing以降）から表示
+    // loading/waitingPermission中は表示しない（ユーザーがパーミッションボタンを押せるように）
+    final shouldShowOverlay = _showIntroOverlay &&
+        state.koemyaku != null &&
+        state.status != FinderWebStatus.loading &&
+        state.status != FinderWebStatus.waitingPermission;
 
-    // オーバーレイを表示するかどうか（koemyakuが取得できてから表示）
-    final shouldShowOverlay = _showIntroOverlay && state.koemyaku != null;
+    // オーバーレイ表示中のローディング判定
+    // initializing状態ならローディング中
+    final isLoading = state.status == FinderWebStatus.initializing;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,

@@ -160,9 +160,11 @@ class FinderNotifier extends StateNotifier<FinderState> {
 
     if (nearest != null) {
       final bearing = _calculateBearing(currentPosition, nearest.latLng);
+      // 表示用の距離はマーカー半径を考慮（ゾーン境界までの距離）
+      final effectiveDistance = math.max(0.0, nearestDistance - nearest.radius);
       state = state.copyWith(
         currentTarget: nearest,
-        distanceToTarget: nearestDistance,
+        distanceToTarget: effectiveDistance,
         bearingToTarget: bearing,
       );
     } else {
@@ -183,12 +185,15 @@ class FinderNotifier extends StateNotifier<FinderState> {
 
     final bearing = _calculateBearing(currentPosition, target.latLng);
 
+    // 表示用の距離はマーカー半径を考慮（ゾーン境界までの距離）
+    final effectiveDistance = math.max(0.0, distance - target.radius);
+
     state = state.copyWith(
-      distanceToTarget: distance,
+      distanceToTarget: effectiveDistance,
       bearingToTarget: bearing,
     );
 
-    // 到着判定
+    // 到着判定（中心からの距離が半径以内）
     if (distance <= target.radius) {
       _onArrived();
     }
