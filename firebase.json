@@ -1,1 +1,55 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"hackathon2025app","appId":"1:862588647458:android:8012023c6edd9b8f4d727b","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"hackathon2025app","appId":"1:862588647458:ios:4ea346d6b23bc4014d727b","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"hackathon2025app","appId":"1:862588647458:ios:4ea346d6b23bc4014d727b","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"hackathon2025app","configurations":{"android":"1:862588647458:android:8012023c6edd9b8f4d727b","ios":"1:862588647458:ios:4ea346d6b23bc4014d727b","macos":"1:862588647458:ios:4ea346d6b23bc4014d727b","web":"1:862588647458:web:010f20d6ddf613944d727b","windows":"1:862588647458:web:e16c8c29d1bfcec34d727b"}}}}}}
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "hackathon2025app",
+          "appId": "1:862588647458:android:8012023c6edd9b8f4d727b",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "hackathon2025app",
+          "appId": "1:862588647458:ios:4ea346d6b23bc4014d727b",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "hackathon2025app",
+          "appId": "1:862588647458:ios:4ea346d6b23bc4014d727b",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "hackathon2025app",
+          "configurations": {
+            "android": "1:862588647458:android:8012023c6edd9b8f4d727b",
+            "ios": "1:862588647458:ios:4ea346d6b23bc4014d727b",
+            "macos": "1:862588647458:ios:4ea346d6b23bc4014d727b",
+            "web": "1:862588647458:web:010f20d6ddf613944d727b",
+            "windows": "1:862588647458:web:e16c8c29d1bfcec34d727b"
+          }
+        }
+      }
+    }
+  }
+}

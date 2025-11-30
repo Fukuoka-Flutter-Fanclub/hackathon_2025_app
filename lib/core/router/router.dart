@@ -16,13 +16,17 @@ final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);
 
   return GoRouter(
-    initialLocation: kIsWeb ? FinderWebPage.routeName : WelcomePage.routeName,
+    // Webではブラウザの URL を使う（initialLocationを設定しない）
+    // モバイルでは WelcomePage から開始
+    initialLocation: kIsWeb ? null : WelcomePage.routeName,
     redirect: (context, state) {
       final user = authState.whenData((user) => user).value;
       final isLoggedIn = user != null;
-      final isGoingToWelcome = state.matchedLocation == WelcomePage.routeName;
-      final isGoingToFinderWeb =
-          state.matchedLocation.startsWith(FinderWebPage.routeName);
+      final path = state.uri.path;
+      final isGoingToWelcome = path == WelcomePage.routeName;
+      final isGoingToFinderWeb = path.startsWith(FinderWebPage.routeName);
+
+      debugPrint('Router redirect - path: $path, isLoggedIn: $isLoggedIn, isGoingToFinderWeb: $isGoingToFinderWeb');
 
       // Web版のFinderページは認証不要
       if (isGoingToFinderWeb) {

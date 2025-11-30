@@ -26,13 +26,16 @@ void main() {
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-      FlutterError.onError =
-          FirebaseCrashlytics.instance.recordFlutterFatalError;
-      PlatformDispatcher.instance.onError = (error, stack) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-        return true;
-      };
+      // Crashlytics is not supported on Web
+      if (!kIsWeb) {
+        await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+        FlutterError.onError =
+            FirebaseCrashlytics.instance.recordFlutterFatalError;
+        PlatformDispatcher.instance.onError = (error, stack) {
+          FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+          return true;
+        };
+      }
 
       // Firebase Analytics
       final analytics = FirebaseAnalytics.instance;
@@ -45,12 +48,12 @@ void main() {
       runApp(ProviderScope(child: TranslationProvider(child: const MyApp())));
     },
     (error, stack) {
-      // Firebaseが初期化されている場合のみCrashlyticsに報告
-      if (Firebase.apps.isNotEmpty) {
+      // Firebaseが初期化されている場合のみCrashlyticsに報告（Web以外）
+      if (!kIsWeb && Firebase.apps.isNotEmpty) {
         FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       } else {
-        // Firebase初期化前のエラーはコンソールに出力
-        debugPrint('Error before Firebase init: $error');
+        // Firebase初期化前またはWebのエラーはコンソールに出力
+        debugPrint('Error: $error');
         debugPrint('$stack');
       }
     },

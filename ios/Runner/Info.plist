@@ -51,5 +51,10 @@
 	<string>現在地をマップ上に表示するために位置情報を使用します</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>マーカーに音声メモを追加するためにマイクを使用します</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>

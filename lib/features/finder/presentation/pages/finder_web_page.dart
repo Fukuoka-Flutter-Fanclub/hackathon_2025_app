@@ -14,10 +14,7 @@ import 'package:latlong2/latlong.dart';
 
 /// Web用 Finder ページ
 class FinderWebPage extends ConsumerStatefulWidget {
-  const FinderWebPage({
-    super.key,
-    required this.koemyakuId,
-  });
+  const FinderWebPage({super.key, required this.koemyakuId});
 
   final String koemyakuId;
 
@@ -56,10 +53,9 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: _buildAppBar(context, theme, state, t),
-      body: SafeArea(
-        child: _buildBody(context, state, audioService, t),
-      ),
-      floatingActionButton: state.status == FinderWebStatus.navigating ||
+      body: SafeArea(child: _buildBody(context, state, audioService, t)),
+      floatingActionButton:
+          state.status == FinderWebStatus.navigating ||
               state.status == FinderWebStatus.arrived
           ? FloatingActionButton(
               onPressed: () => _showMapBottomSheet(context, state),
@@ -162,11 +158,7 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.explore,
-              size: 80.sp,
-              color: theme.colorScheme.primary,
-            ),
+            Icon(Icons.explore, size: 80.sp, color: theme.colorScheme.primary),
             SizedBox(height: 32.h),
             Text(
               t.finderWeb.permissionTitle,
@@ -419,10 +411,7 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
               color: theme.colorScheme.error,
             ),
             SizedBox(height: 16.h),
-            Text(
-              errorTitle,
-              style: theme.textTheme.titleMedium,
-            ),
+            Text(errorTitle, style: theme.textTheme.titleMedium),
             if (errorMessage.isNotEmpty) ...[
               SizedBox(height: 8.h),
               Text(
@@ -489,9 +478,11 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
+        initialChildSize: 0.65,
         minChildSize: 0.3,
         maxChildSize: 0.9,
         builder: (context, scrollController) => Container(
@@ -499,30 +490,21 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
           ),
-          child: Column(
+          child: Stack(
             children: [
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 12.h),
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-              Expanded(
-                child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(16.r)),
-                  child: FlutterMap(
-                    options: MapOptions(
-                      initialCenter: center,
-                      initialZoom: 15,
-                    ),
+              Column(
+                children: [
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
+                      ),
+                      child: FlutterMap(
+                    options: MapOptions(initialCenter: center, initialZoom: 15),
                     children: [
                       TileLayer(
                         urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
                         userAgentPackageName: 'com.example.hackathon_2025_app',
                       ),
                       if (state.currentLatitude != 0 &&
@@ -531,20 +513,23 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
                           markers: [
                             Marker(
                               point: LatLng(
-                                  state.currentLatitude, state.currentLongitude),
+                                state.currentLatitude,
+                                state.currentLongitude,
+                              ),
                               width: 60,
                               height: 60,
-                              child:
-                                  CurrentLocationMarker(heading: state.userHeading),
+                              child: CurrentLocationMarker(
+                                heading: state.userHeading,
+                              ),
                             ),
                           ],
                         ),
                       MarkerLayer(
                         markers: state.allMarkers.map((marker) {
-                          final isVisited =
-                              state.visitedMarkerIds.contains(marker.id);
-                          final isTarget =
-                              state.currentTarget?.id == marker.id;
+                          final isVisited = state.visitedMarkerIds.contains(
+                            marker.id,
+                          );
+                          final isTarget = state.currentTarget?.id == marker.id;
                           return Marker(
                             point: marker.latLng,
                             width: 40,
@@ -566,6 +551,29 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
                       ),
                     ],
                   ),
+                    ),
+                  ),
+                ],
+              ),
+              // 右上の閉じるボタン
+              Positioned(
+                top: 8.h,
+                right: 8.w,
+                child: Material(
+                  color: theme.colorScheme.surface.withValues(alpha: 0.9),
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    customBorder: const CircleBorder(),
+                    child: Padding(
+                      padding: EdgeInsets.all(8.w),
+                      child: Icon(
+                        Icons.close,
+                        size: 24.sp,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -577,10 +585,7 @@ class _FinderWebPageState extends ConsumerState<FinderWebPage> {
 }
 
 class _VoiceMarkerIcon extends StatelessWidget {
-  const _VoiceMarkerIcon({
-    required this.isVisited,
-    required this.isTarget,
-  });
+  const _VoiceMarkerIcon({required this.isVisited, required this.isTarget});
 
   final bool isVisited;
   final bool isTarget;
@@ -613,10 +618,7 @@ class _VoiceMarkerIcon extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
+        border: Border.all(color: Colors.white, width: 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),

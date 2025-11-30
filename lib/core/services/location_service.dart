@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -97,9 +99,11 @@ class LocationService {
   }
 
   /// 位置情報のストリームを取得（リアルタイム更新用）
+  /// [intervalMs] - 更新間隔（ミリ秒）、Androidのみ有効。デフォルト2000ms
   Stream<Position> getPositionStream({
     LocationAccuracy accuracy = LocationAccuracy.high,
-    int distanceFilter = 5,
+    int distanceFilter = 3,
+    int intervalMs = 2000,
     bool enableBackgroundMode = false,
   }) {
     late LocationSettings locationSettings;
@@ -108,6 +112,7 @@ class LocationService {
       locationSettings = AndroidSettings(
         accuracy: accuracy,
         distanceFilter: distanceFilter,
+        intervalDuration: Duration(milliseconds: intervalMs),
         foregroundNotificationConfig: enableBackgroundMode
             ? const ForegroundNotificationConfig(
                 notificationText: '位置情報を取得中...',
@@ -134,6 +139,64 @@ class LocationService {
     }
 
     return Geolocator.getPositionStream(locationSettings: locationSettings);
+  }
+
+  /// ナビゲーション用の位置情報ストリーム（定期的なポーリング付き）
+  /// distanceFilterに加えて、intervalMsで指定した間隔でも更新される
+  /// Web/iOSでもintervalDurationが効かない場合に対応
+  Stream<Position> getNavigationPositionStream({
+    LocationAccuracy accuracy = LocationAccuracy.high,
+    int distanceFilter = 3,
+    int intervalMs = 2000,
+    bool enableBackgroundMode = false,
+  }) {
+    final controller = StreamController<Position>.broadcast();
+    StreamSubscription<Position>? streamSubscription;
+    Timer? pollingTimer;
+    Position? lastPosition;
+
+    void emitPosition(Position position) {
+      // 重複した位置情報をフィルター
+      if (lastPosition == null ||
+          lastPosition!.latitude != position.latitude ||
+          lastPosition!.longitude != position.longitude ||
+          lastPosition!.heading != position.heading) {
+        lastPosition = position;
+        controller.add(position);
+      }
+    }
+
+    controller.onListen = () {
+      // Geolocatorのストリームを開始
+      streamSubscription = getPositionStream(
+        accuracy: accuracy,
+        distanceFilter: distanceFilter,
+        intervalMs: intervalMs,
+        enableBackgroundMode: enableBackgroundMode,
+      ).listen(
+        emitPosition,
+        onError: (e) => debugPrint('Position stream error: $e'),
+      );
+
+      // 定期的なポーリングを開始（Web/iOS対策）
+      pollingTimer = Timer.periodic(Duration(milliseconds: intervalMs), (_) async {
+        try {
+          final position = await Geolocator.getCurrentPosition(
+            locationSettings: LocationSettings(accuracy: accuracy),
+          );
+          emitPosition(position);
+        } catch (e) {
+          debugPrint('Position polling error: $e');
+        }
+      });
+    };
+
+    controller.onCancel = () {
+      streamSubscription?.cancel();
+      pollingTimer?.cancel();
+    };
+
+    return controller.stream;
   }
 
   /// バックグラウンド位置情報の権限をチェック

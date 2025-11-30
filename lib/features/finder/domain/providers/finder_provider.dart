@@ -83,9 +83,13 @@ class FinderNotifier extends StateNotifier<FinderState> {
     // バックグラウンド位置情報の権限をリクエスト（オプション）
     await locationService.ensureBackgroundLocationPermission();
 
-    // 位置情報ストリームを開始（バックグラウンドモード有効）
+    // ナビゲーション用位置情報ストリームを開始（ポーリング付き、バックグラウンドモード有効）
     _positionSubscription = locationService
-        .getPositionStream(enableBackgroundMode: true)
+        .getNavigationPositionStream(
+          distanceFilter: 3,
+          intervalMs: 2000, // 2秒間隔
+          enableBackgroundMode: true,
+        )
         .listen(
       (position) {
         _updatePosition(position);

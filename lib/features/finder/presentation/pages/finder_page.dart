@@ -14,10 +14,7 @@ import 'package:hackathon_2025_app/i18n/strings.g.dart';
 import 'package:latlong2/latlong.dart';
 
 class FinderPage extends ConsumerStatefulWidget {
-  const FinderPage({
-    super.key,
-    required this.koemyaku,
-  });
+  const FinderPage({super.key, required this.koemyaku});
 
   final KoemyakuData koemyaku;
 
@@ -67,10 +64,7 @@ class _FinderPageState extends ConsumerState<FinderPage> {
           icon: const Icon(Icons.close),
           onPressed: () => _onClose(context),
         ),
-        title: Text(
-          widget.koemyaku.title,
-          style: theme.textTheme.titleMedium,
-        ),
+        title: Text(widget.koemyaku.title, style: theme.textTheme.titleMedium),
         centerTitle: true,
         actions: [
           // 進捗表示
@@ -87,9 +81,7 @@ class _FinderPageState extends ConsumerState<FinderPage> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: _buildBody(context, finderState, audioService, t),
-      ),
+      body: SafeArea(child: _buildBody(context, finderState, audioService, t)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showMapBottomSheet(context, finderState),
         child: const Icon(Icons.map),
@@ -305,11 +297,7 @@ class _FinderPageState extends ConsumerState<FinderPage> {
     );
   }
 
-  Widget _buildError(
-    BuildContext context,
-    FinderState state,
-    Translations t,
-  ) {
+  Widget _buildError(BuildContext context, FinderState state, Translations t) {
     final theme = Theme.of(context);
 
     return Center(
@@ -322,10 +310,7 @@ class _FinderPageState extends ConsumerState<FinderPage> {
             color: theme.colorScheme.error,
           ),
           SizedBox(height: 16.h),
-          Text(
-            t.finder.error,
-            style: theme.textTheme.titleMedium,
-          ),
+          Text(t.finder.error, style: theme.textTheme.titleMedium),
           SizedBox(height: 8.h),
           Text(
             state.errorMessage ?? '',
@@ -410,17 +395,15 @@ class _FinderPageState extends ConsumerState<FinderPage> {
               // マップ
               Expanded(
                 child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(16.r)),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(16.r),
+                  ),
                   child: FlutterMap(
-                    options: MapOptions(
-                      initialCenter: center,
-                      initialZoom: 15,
-                    ),
+                    options: MapOptions(initialCenter: center, initialZoom: 15),
                     children: [
                       TileLayer(
                         urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
                         userAgentPackageName: 'com.example.hackathon_2025_app',
                       ),
                       // 現在地マーカー
@@ -430,21 +413,24 @@ class _FinderPageState extends ConsumerState<FinderPage> {
                           markers: [
                             Marker(
                               point: LatLng(
-                                  state.currentLatitude, state.currentLongitude),
+                                state.currentLatitude,
+                                state.currentLongitude,
+                              ),
                               width: 60,
                               height: 60,
-                              child:
-                                  CurrentLocationMarker(heading: state.userHeading),
+                              child: CurrentLocationMarker(
+                                heading: state.userHeading,
+                              ),
                             ),
                           ],
                         ),
                       // 音声マーカー
                       MarkerLayer(
                         markers: state.allMarkers.map((marker) {
-                          final isVisited =
-                              state.visitedMarkerIds.contains(marker.id);
-                          final isTarget =
-                              state.currentTarget?.id == marker.id;
+                          final isVisited = state.visitedMarkerIds.contains(
+                            marker.id,
+                          );
+                          final isTarget = state.currentTarget?.id == marker.id;
                           return Marker(
                             point: marker.latLng,
                             width: 40,
@@ -479,10 +465,7 @@ class _FinderPageState extends ConsumerState<FinderPage> {
 
 /// 音声マーカーのアイコン
 class _VoiceMarkerIcon extends StatelessWidget {
-  const _VoiceMarkerIcon({
-    required this.isVisited,
-    required this.isTarget,
-  });
+  const _VoiceMarkerIcon({required this.isVisited, required this.isTarget});
 
   final bool isVisited;
   final bool isTarget;
@@ -515,10 +498,7 @@ class _VoiceMarkerIcon extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
+        border: Border.all(color: Colors.white, width: 2),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.2),

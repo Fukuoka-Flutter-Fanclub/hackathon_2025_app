@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hackathon_2025_app/core/services/audio_playback_service.dart';
 import 'package:hackathon_2025_app/core/services/koemyaku_service.dart';
+import 'package:hackathon_2025_app/core/services/location_service.dart';
 import 'package:hackathon_2025_app/core/services/web_compass_service.dart';
 import 'package:hackathon_2025_app/features/map/data/models/koemyaku/koemyaku_data.dart';
 import 'package:hackathon_2025_app/features/map/data/models/marker/marker_data.dart';
@@ -233,20 +234,22 @@ class FinderWebNotifier extends StateNotifier<FinderWebState> {
       );
       _updatePosition(position);
 
-      // 位置情報ストリームを開始
-      _positionSubscription = Geolocator.getPositionStream(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 5,
-        ),
-      ).listen(
-        (position) {
-          _updatePosition(position);
-        },
-        onError: (e) {
-          debugPrint('Position stream error: $e');
-        },
-      );
+      // ナビゲーション用位置情報ストリームを開始（ポーリング付き）
+      final locationService = _ref.read(locationServiceProvider);
+      _positionSubscription = locationService
+          .getNavigationPositionStream(
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 3,
+            intervalMs: 2000, // 2秒間隔
+          )
+          .listen(
+            (position) {
+              _updatePosition(position);
+            },
+            onError: (e) {
+              debugPrint('Position stream error: $e');
+            },
+          );
 
       // コンパスストリームを開始
       final compassService = _ref.read(webCompassServiceProvider);

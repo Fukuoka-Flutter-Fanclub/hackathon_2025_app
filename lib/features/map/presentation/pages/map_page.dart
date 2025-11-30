@@ -73,28 +73,28 @@ class _MapPageState extends ConsumerState<MapPage> {
     }
 
     // 位置情報のストリームを開始
-    _positionStreamSubscription = locationService.getPositionStream().listen(
-      (Position position) {
-        setState(() {
-          _currentPosition = LatLng(position.latitude, position.longitude);
-          // コンパスが利用不可の場合はGPSのheadingを使用
-          if (!_isCompassAvailable) {
-            _heading = position.heading;
-          }
-        });
-      },
-    );
+    _positionStreamSubscription = locationService.getPositionStream().listen((
+      Position position,
+    ) {
+      setState(() {
+        _currentPosition = LatLng(position.latitude, position.longitude);
+        // コンパスが利用不可の場合はGPSのheadingを使用
+        if (!_isCompassAvailable) {
+          _heading = position.heading;
+        }
+      });
+    });
 
     // コンパスのストリームを開始（利用可能な場合のみ）
     _isCompassAvailable = await locationService.isCompassAvailable();
     if (_isCompassAvailable) {
-      _compassStreamSubscription = locationService.getCompassStream().listen(
-        (double heading) {
-          setState(() {
-            _heading = heading;
-          });
-        },
-      );
+      _compassStreamSubscription = locationService.getCompassStream().listen((
+        double heading,
+      ) {
+        setState(() {
+          _heading = heading;
+        });
+      });
     }
   }
 
@@ -113,13 +113,11 @@ class _MapPageState extends ConsumerState<MapPage> {
       body: SafeArea(
         child: FlutterMap(
           mapController: _mapController,
-          options: MapOptions(
-            initialCenter: center,
-            initialZoom: _initialZoom,
-          ),
+          options: MapOptions(initialCenter: center, initialZoom: _initialZoom),
           children: [
             TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              urlTemplate:
+                  'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
               userAgentPackageName: 'com.example.hackathon_2025_app',
             ),
             if (_currentPosition != null && _isLocationEnabled)
